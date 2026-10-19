@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Xcorp Video AI Studio - Nền Tảng Sản Xuất Video TikTok SaaS</title>
   <link rel="stylesheet" href="styles.css?v=2.35">
+  <link rel="stylesheet" href="company-theme.css?v=1.0">
   <link rel="icon" type="image/svg+xml" href="Logo_Xcorp_R.svg">
   <script>
     (function () {
@@ -172,64 +173,51 @@
   <!-- ===================================================================
        1. TOP SAAS APP HEADER (50px) - XCORP ENTERPRISE DESIGN SYSTEM
        =================================================================== -->
-  <header class="heygen-topbar studio-header">
-    <div style="display: flex; align-items: center; gap: 1.25rem;">
-      <!-- HeyGen Welcome Text -->
-      <div class="heygen-welcome-text">
-        Welcome, <span class="heygen-welcome-name" id="topbar-welcome-username">Lâm</span>
+  <header class="studio-header">
+    <div class="xcorp-header-left">
+      <div class="xcorp-brand-logo-wrap" onclick="switchPanel('panel-livestream')">
+        <img src="Logo_Xcorp_R.svg" alt="XCORP" class="xcorp-logo-svg">
+        <span class="xcorp-brand-name">XCORP<span class="xcorp-brand-r">®</span></span>
       </div>
+      <span class="xcorp-breadcrumb-sep">&gt;</span>
+      <span class="xcorp-breadcrumb-item" id="topbar-breadcrumb-parent">SIU TEST</span>
+      <span class="xcorp-breadcrumb-sep">&gt;</span>
+      <span class="xcorp-breadcrumb-item active" id="topbar-breadcrumb-title">CẮT HIGHLIGHT LIVE</span>
 
-      <!-- Workspace Brand Switcher Pill -->
-      <div class="workspace-brand-pill" id="topbar-workspace-pill" style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 9999px; background: rgba(0,242,254,0.08); border: 1px solid rgba(0,242,254,0.3); font-size: 0.82rem; font-weight: 700; color: var(--text-main); cursor: pointer;" title="Đổi Brand / Workspace">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
-        <span id="topbar-root-brand">Mỹ Phẩm Mỹ Nguyên TSC</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-      </div>
-
-      <!-- Hidden compatibility breadcrumb nodes -->
-      <span id="topbar-current-suite" style="display: none;">Video AI Studio</span>
-      <span id="topbar-current-module" style="display: none;">Studio Hub</span>
-
-      <!-- Project Switcher Dropdown (neo theo Breadcrumb) -->
-      <div class="project-dropdown-menu" id="project-dropdown-menu" style="display: none;">
-        <!-- Dynamically populated -->
-      </div>
+      <!-- Hidden compatibility nodes for existing JavaScript -->
+      <span id="topbar-welcome-username" style="display:none;">Lâm</span>
+      <span id="topbar-root-brand" style="display:none;">Mỹ Phẩm Mỹ Nguyên TSC</span>
+      <span id="topbar-current-suite" style="display:none;">Video AI Studio</span>
+      <span id="topbar-current-module" style="display:none;">Studio Hub</span>
+      <div class="project-dropdown-menu" id="project-dropdown-menu" style="display: none;"></div>
     </div>
 
     <!-- Right Actions Cluster -->
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <!-- Ask Orby AI Button matching HeyGen screenshot -->
-      
-
+    <div class="xcorp-header-right">
       <!-- Search Icon Button -->
-      <button class="topbar-icon-btn" id="btn-topbar-search" title="Tìm kiếm nhanh (Ctrl + K)">
+      <button class="xcorp-header-icon-btn" id="btn-topbar-search" title="Tìm kiếm nhanh (Ctrl + K)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <path d="m21 21-4.3-4.3"></path>
         </svg>
       </button>
 
+      <!-- Language Pill -->
+      <div class="xcorp-lang-pill" id="btn-topbar-lang" title="Language: English / Tiếng Việt">EN</div>
+
       <!-- Notification Icon Button -->
-      <button class="topbar-icon-btn" id="btn-notifications" title="Thông báo hệ thống">
+      <button class="xcorp-header-icon-btn" id="btn-notifications" title="Thông báo hệ thống">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
           <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
         </svg>
       </button>
 
-      <!-- User Avatar Trigger & Popover Dropdown -->
+      <!-- User Avatar Circle 'B' -->
       <div class="xcorp-user-profile-anchor">
-        <button class="xcorp-user-avatar-btn" id="topbar-user-profile" title="Quản lý tài khoản &amp; Phân quyền">
-          <div class="topbar-user-avatar-img-box">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-              alt="Avatar" class="topbar-avatar-img" id="topbar-avatar-photo"
-              onerror="this.style.display='none'; document.getElementById('topbar-avatar-badge').style.display='flex';" />
-            <div class="topbar-user-avatar" id="topbar-avatar-badge"
-              style="display:none; width: 32px; height: 32px; font-size: 0.78rem;">VH</div>
-          </div>
-        </button>
+        <div class="xcorp-avatar-badge-b" id="topbar-user-profile" title="Tài khoản: B (Siu test)">B</div>
 
-        <!-- Account Popover Modal/Dropdown -->
+        <!-- Account Popover Dropdown -->
         <div class="account-popover" id="account-dropdown-popover">
           <div class="account-popover-user-row">
             <div class="account-popover-name" id="popover-user-name">Nguyễn Văn Hùng</div>
@@ -237,7 +225,6 @@
             <span class="account-popover-badge" id="popover-user-badge">Quản lý Kênh &amp; Studio</span>
           </div>
 
-          <!-- Theme Toggle inside Popover -->
           <div class="account-theme-row">
             <span class="account-theme-label">Chế độ giao diện</span>
             <button class="folder-pill-btn" id="btn-popover-theme-toggle"
@@ -248,14 +235,12 @@
                   <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
                 </svg>
               </span>
-              <span id="popover-theme-label">Chế độ: Tối</span>
+              <span id="popover-theme-label">Chế độ: Sáng</span>
             </button>
           </div>
 
           <div class="account-roles-section-title">CHUYỂN NHANH VAI TRÒ (KIỂM THỬ PHÂN QUYỀN)</div>
-          <div class="account-roles-list" id="account-roles-list">
-            <!-- 5 roles dynamically rendered -->
-          </div>
+          <div class="account-roles-list" id="account-roles-list"></div>
 
           <button class="account-logout-btn" id="btn-account-logout">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -279,10 +264,10 @@
     <!-- ===================================================================
          LEFT SIDEBAR: XCORP ENTERPRISE MENU
          =================================================================== -->
-    <aside class="heygen-sidebar" id="heygen-sidebar">
+    <aside class="heygen-sidebar xcorp-sidebar-compact" id="heygen-sidebar">
       <div class="heygen-sidebar-logo" title="Xcorp Video AI Studio">
         <div class="heygen-logo-diamond">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0053b3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2" />
             <polyline points="2 17 12 22 22 17" />
             <polyline points="2 12 12 17 22 12" />
@@ -291,9 +276,8 @@
       </div>
 
       <nav class="heygen-nav-list">
-        <!-- GROUP 1: 3 CORE STUDIOS -->
-        <!-- 1. Cắt Highlight Live (Core 1 - Priority #1 Active) -->
-        <button class="heygen-nav-btn active" data-panel="panel-livestream" id="heygen-nav-livestream" title="Cắt Highlight Live">
+        <!-- 1. Highlight -->
+        <button class="heygen-nav-btn active" data-panel="panel-livestream" id="heygen-nav-livestream" onclick="switchPanel('panel-livestream')" title="Cắt Highlight Live">
           <span class="heygen-nav-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="6" cy="6" r="3" />
@@ -307,8 +291,8 @@
           <span class="heygen-nav-text">Highlight</span>
         </button>
 
-        <!-- 2. Dựng Video Từ Ảnh (Core 2) -->
-        <button class="heygen-nav-btn" data-panel="panel-multi-engine" id="heygen-nav-multi-engine" title="Dựng Video Từ Ảnh">
+        <!-- 2. Dựng Video Từ Ảnh -->
+        <button class="heygen-nav-btn" data-panel="panel-multi-engine" id="heygen-nav-multi-engine" onclick="switchPanel('panel-multi-engine')" title="Dựng Video Từ Ảnh">
           <span class="heygen-nav-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m15 4-2 4-4 2 4 2 2 4 2-4 4-2-4-2z" />
@@ -320,8 +304,8 @@
           <span class="heygen-nav-text">Ảnh sang Video</span>
         </button>
 
-        <!-- 3. Chỉnh Sửa Video Gốc (Core 3) -->
-        <button class="heygen-nav-btn" data-panel="panel-raw-editor" id="heygen-nav-raw-editor" title="Chỉnh Sửa Video Gốc">
+        <!-- 3. Chỉnh Sửa Video Gốc -->
+        <button class="heygen-nav-btn" data-panel="panel-raw-editor" id="heygen-nav-raw-editor" onclick="switchPanel('panel-raw-editor')" title="Chỉnh Sửa Video Gốc">
           <span class="heygen-nav-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect width="20" height="20" x="2" y="2" rx="2.18" ry="2.18" />
@@ -336,9 +320,8 @@
         <!-- Divider Separator -->
         <div class="heygen-nav-divider"></div>
 
-        <!-- GROUP 2: QUẢN LÝ & TÀI NGUYÊN (ASSETS & PROJECTS) -->
-        <!-- 4. Assets (Brand Assets Hub Page) -->
-        <button class="heygen-nav-btn" data-panel="panel-assets-hub" id="heygen-nav-assets" title="Kho Brand &amp; Assets">
+        <!-- 4. Assets -->
+        <button class="heygen-nav-btn" data-panel="panel-assets-hub" id="heygen-nav-assets" onclick="switchPanel('panel-assets-hub')" title="Kho Brand & Assets">
           <span class="heygen-nav-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
@@ -348,8 +331,8 @@
           <span class="heygen-nav-text">Assets</span>
         </button>
 
-        <!-- 5. Projects (Quản Lý Dự Án - Nằm ở cuối) -->
-        <button class="heygen-nav-btn" data-panel="panel-projects-hub" id="heygen-nav-projects" title="Quản Lý Dự Án (Projects)">
+        <!-- 5. Projects -->
+        <button class="heygen-nav-btn" data-panel="panel-projects-hub" id="heygen-nav-projects" onclick="switchPanel('panel-projects-hub')" title="Quản Lý Dự Án & Kho Video">
           <span class="heygen-nav-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
@@ -358,28 +341,6 @@
           <span class="heygen-nav-text">Projects</span>
         </button>
       </nav>
-
-      <div class="heygen-nav-bottom">
-        <!-- Chuyển chế độ Giao diện Dark/Light -->
-        <button class="heygen-bottom-btn" id="btn-heygen-theme-toggle" title="Chuyển chế độ Sáng / Tối">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-          </svg>
-        </button>
-
-        <!-- Thông báo hệ thống -->
-        <button class="heygen-bottom-btn" id="btn-heygen-notifications" title="Thông báo hệ thống">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-          </svg>
-        </button>
-
-        <!-- Avatar người dùng & Menu tài khoản -->
-        <div class="heygen-avatar-circle" id="heygen-user-profile-trigger" title="Nguyễn Văn Hùng • Ban Quản Lý &amp; Vận Hành">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User">
-        </div>
-      </div>
     </aside>
 
     <!-- ===================================================================
@@ -1051,22 +1012,6 @@
 
                 <!-- Actions Tab Content -->
                 <div class="clip-inspector-tab-content" id="inspector-tab-actions" style="display: none;">
-                  <div class="clip-actions-grid">
-                    <button type="button" class="clip-action-card-btn" onclick="window.openProjectInStudio(state.activeProjectId)">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                      <div>
-                        <strong>Mở trong Studio Cắt Highlight</strong>
-                        <p>Chỉnh sửa mốc cắt, đổi tỉ lệ khung hình</p>
-                      </div>
-                    </button>
-                    <button type="button" class="clip-action-card-btn" onclick="window.exportClipQuick('tiktok')">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                      <div>
-                        <strong>Xuất Video TikTok (1080x1920)</strong>
-                        <p>Kèm phụ đề tự động & font chữ nổi bật</p>
-                      </div>
-                    </button>
-                  </div>
                   <!-- Mini Editor Section Mount (Edge-case quick editing) -->
                   <div id="clip-mini-editor-mount"></div>
                 </div>
@@ -1338,33 +1283,30 @@
           </div>
         </div>
 
-        <!-- PIPELINE STEPPER: 4 BƯỚC QUY TRÌNH CHUẨN (TODO26 & SCOPE) -->
+        <!-- PIPELINE STEPPER: 3 BƯỚC QUY TRÌNH TINH GỌN CHUẨN XCORP -->
         <div class="ls-pipeline-stepper" id="ls-pipeline-stepper-bar">
-          <div class="ls-pipe-step-item active" id="ls-pipe-step-1">
-            <span class="ls-pipe-step-num">1</span>
-            <span>Duyệt & Sửa Transcript ASR</span>
+          <div class="xcorp-step-item completed" id="ls-pipe-step-1" onclick="window.showLsStep(1)">
+            <span class="xcorp-step-badge-done">✓</span>
+            <span>Nạp video</span>
+            <span class="xcorp-step-slash">/</span>
           </div>
-          <span class="ls-pipe-step-arrow">➔</span>
-          <div class="ls-pipe-step-item" id="ls-pipe-step-2">
-            <span class="ls-pipe-step-num">2</span>
-            <span>Cấu Hình Tiêu Chí & Cắt Highlight</span>
+
+          <div class="xcorp-step-item completed" id="ls-pipe-step-2" onclick="window.showLsStep(2)">
+            <span class="xcorp-step-badge-done">✓</span>
+            <span>Cắt clip</span>
+            <span class="xcorp-step-slash">/</span>
           </div>
-          <span class="ls-pipe-step-arrow">➔</span>
-          <div class="ls-pipe-step-item" id="ls-pipe-step-3">
-            <span class="ls-pipe-step-num">3</span>
-            <span>Duyệt Clip Thô (Raw Gate)</span>
-          </div>
-          <span class="ls-pipe-step-arrow">➔</span>
-          <div class="ls-pipe-step-item" id="ls-pipe-step-4">
-            <span class="ls-pipe-step-num">4</span>
-            <span>Hậu Kỳ & Lồng Phụ Đề</span>
+
+          <div class="xcorp-step-item active" id="ls-pipe-step-3" onclick="window.showLsStep(3)">
+            <span class="xcorp-step-badge-active">3</span>
+            <span>Hậu kỳ</span>
           </div>
         </div>
 
         <!-- ===========================================================
              TRẠNG THÁI 1: KHUNG NẠP, TÁI SỬ DỤNG LIVESTREAM & CẤU HÌNH TIÊU CHÍ CẮT
              =========================================================== -->
-        <div id="ls-upload-state-view">
+        <div id="ls-upload-state-view" style="display: none;">
 
           <!-- Hộp Tái Sử Dụng Livestream Trong Project (Mục I.1 Scope Phase 1) -->
           <div class="glass-card" style="padding: 1.15rem 1.35rem; margin-bottom: 1.25rem;">
@@ -1771,268 +1713,283 @@
         <!-- ===========================================================
              TRẠNG THÁI 3: TRẠM 2 - CẤU HÌNH HẬU KỲ CHUYÊN SÂU & RENDER (Todo23 Item 8 & Mục I.5 Scope Phase 1)
              =========================================================== -->
-        <div id="ls-postprod-state-view" style="display: none;">
-          <div class="results-header-actions"
-            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-            <button class="btn btn-outline btn-sm" id="btn-back-to-raw-review"
-              style="font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="m12 19-7-7 7-7" />
-                <path d="M19 12H5" />
-              </svg>
-              <span>Quay Lại Duyệt Video Thô</span>
-            </button>
-          </div>
+        <div id="ls-postprod-state-view" style="display: block;">
+          <div class="xcorp-postprod-layout">
+            <!-- CỘT TRÁI: DANH SÁCH CLIP ĐÃ TỰ ĐỘNG CẮT (MATCHING SCREENSHOT 1) -->
+            <div class="xcorp-clips-list-col">
+              <div class="xcorp-clips-list-header">
+                <span class="xcorp-clips-list-title">Danh Sách Clip Đã Tự Động Cắt (Bấm để xem Preview trực tiếp):</span>
+                <span class="xcorp-clips-ready-badge">4 CLIP SẴN SÀNG</span>
+              </div>
 
-          <div class="grid-2">
-            <!-- CỘT TRÁI: DANH SÁCH CLIP ĐƯỢC CHỌN HẬU KỲ -->
-            <div style="min-width: 0;">
-              <div class="cut-results-section">
-                <div class="cut-results-header" style="margin-bottom: 0.75rem;">
-                  <div>
-                    <h4 class="cut-results-title">Danh Sách Clip Được Chọn Hậu Kỳ:</h4>
-                    <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
-                      Nhấp vào từng clip để xem trước & tùy chỉnh câu Hook, nhạc nền, phụ đề riêng biệt.
+              <!-- Filter Toolbar -->
+              <div class="xcorp-clips-toolbar">
+                <select class="xcorp-filter-select" id="ls-postprod-group-filter">
+                  <option value="all">Tất cả nhóm</option>
+                  <option value="1">Nhóm 1 - Tư vấn chuyên sâu</option>
+                  <option value="2">Nhóm 2 - Báo giá & Khuyến mãi (Deal)</option>
+                </select>
+                <button type="button" class="xcorp-btn-subtle" id="btn-ls-select-all-clips">Chọn tất cả</button>
+                <button type="button" class="xcorp-btn-subtle" id="btn-ls-rescan-cuts">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  <span>Quét & Cắt Lại Highlight</span>
+                </button>
+              </div>
+
+              <!-- List of Clip Cards -->
+              <div id="ls-postprod-selected-clips-list" class="cut-clips-list">
+                <!-- Clip 01 (Active / Selected) -->
+                <div class="xcorp-clip-card selected" onclick="window.selectPostprodClip(1)">
+                  <div class="xcorp-clip-card-main">
+                    <input type="checkbox" class="xcorp-clip-checkbox" checked onclick="event.stopPropagation()">
+                    <div class="xcorp-clip-num-badge">01</div>
+                    <div class="xcorp-clip-content-col">
+                      <div class="xcorp-clip-header-line">
+                        <h4 class="xcorp-clip-title">Thành phần niacinamide, lutein, shea butter dưỡng ẩm nâng tông, thay thế quy trình makeup nhiều bước</h4>
+                        <div class="xcorp-clip-meta-right">
+                          <span class="xcorp-tag-status">Đã hậu kỳ</span>
+                          <span class="xcorp-clip-timecode">00:09:31 - 00:10:42 • 71s</span>
+                        </div>
+                      </div>
+                      <div class="xcorp-clip-footer-line">
+                        <span class="xcorp-clip-group-label">Nhóm 1 - Tư vấn chuyên sâu</span>
+                        <button type="button" class="xcorp-btn-preview primary" onclick="event.stopPropagation(); window.previewPostprodClip(1)">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                          <span>Xem Preview</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div id="ls-postprod-selected-clips-list" class="cut-clips-list"></div>
+                <!-- Clip 02 -->
+                <div class="xcorp-clip-card" onclick="window.selectPostprodClip(2)">
+                  <div class="xcorp-clip-card-main">
+                    <input type="checkbox" class="xcorp-clip-checkbox" onclick="event.stopPropagation()">
+                    <div class="xcorp-clip-num-badge">02</div>
+                    <div class="xcorp-clip-content-col">
+                      <div class="xcorp-clip-header-line">
+                        <h4 class="xcorp-clip-title">Chương trình giảm giá 380k và tính chi phí sử dụng hàng ngày</h4>
+                        <div class="xcorp-clip-meta-right">
+                          <span class="xcorp-tag-status">Đã hậu kỳ</span>
+                          <span class="xcorp-clip-timecode">00:52:32 - 00:53:02 • 30s</span>
+                        </div>
+                      </div>
+                      <div class="xcorp-clip-footer-line">
+                        <span class="xcorp-clip-group-label">Nhóm 2 - Báo giá & Khuyến mãi (Deal)</span>
+                        <button type="button" class="xcorp-btn-preview outline" onclick="event.stopPropagation(); window.previewPostprodClip(2)">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                          <span>Xem Preview</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Clip 03 -->
+                <div class="xcorp-clip-card" onclick="window.selectPostprodClip(3)">
+                  <div class="xcorp-clip-card-main">
+                    <input type="checkbox" class="xcorp-clip-checkbox" onclick="event.stopPropagation()">
+                    <div class="xcorp-clip-num-badge">03</div>
+                    <div class="xcorp-clip-content-col">
+                      <div class="xcorp-clip-header-line">
+                        <h4 class="xcorp-clip-title">Phân tích thành phần hoạt chất và công dụng dưỡng sáng, mờ nám</h4>
+                        <div class="xcorp-clip-meta-right">
+                          <span class="xcorp-tag-status">Đã hậu kỳ</span>
+                          <span class="xcorp-clip-timecode">00:57:34 - 00:58:11 • 37s</span>
+                        </div>
+                      </div>
+                      <div class="xcorp-clip-footer-line">
+                        <span class="xcorp-clip-group-label">Nhóm 1 - Tư vấn chuyên sâu</span>
+                        <button type="button" class="xcorp-btn-preview outline" onclick="event.stopPropagation(); window.previewPostprodClip(3)">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                          <span>Xem Preview</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Clip 04 -->
+                <div class="xcorp-clip-card" onclick="window.selectPostprodClip(4)">
+                  <div class="xcorp-clip-card-main">
+                    <input type="checkbox" class="xcorp-clip-checkbox" onclick="event.stopPropagation()">
+                    <div class="xcorp-clip-num-badge">04</div>
+                    <div class="xcorp-clip-content-col">
+                      <div class="xcorp-clip-header-line">
+                        <h4 class="xcorp-clip-title">Hướng dẫn cách thoa serum kết hợp kem chống nắng nâng tone không vón cục</h4>
+                        <div class="xcorp-clip-meta-right">
+                          <span class="xcorp-tag-status">Đã hậu kỳ</span>
+                          <span class="xcorp-clip-timecode">01:12:15 - 01:13:00 • 45s</span>
+                        </div>
+                      </div>
+                      <div class="xcorp-clip-footer-line">
+                        <span class="xcorp-clip-group-label">Nhóm 1 - Tư vấn chuyên sâu</span>
+                        <button type="button" class="xcorp-btn-preview outline" onclick="event.stopPropagation(); window.previewPostprodClip(4)">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                          <span>Xem Preview</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- CỘT PHẢI: VIDEO PREVIEW & BẢNG CẤU HÌNH HẬU KỲ (HOOK, AUDIO, BGM, CAPTIONS, THUMB) -->
-            <div style="min-width: 0;">
-              <div
-                style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
-                <span>Xem Trước Video Hậu Kỳ & Hook</span>
-              </div>
-
-              <!-- Mockup 9:16 Preview Player Hậu Kỳ -->
-              <div class="mockup-9-16-container">
-                <video id="ls-postprod-preview-video" class="mockup-9-16-video" autoplay muted loop playsinline controls
-                  src="media/video/final_final.mp4" poster="media/image/farmstay_retinol_table.jpg"></video>
-                <div class="overlay-brand-badge">
-                  <span>MỸ NGUYÊN TSC CHÍNH NGẠCH</span>
-                </div>
-                <div class="overlay-broll-packshot">
-                  <img id="ls-postprod-broll-img" src="media/image/farmstay_retinol_box.jpg" alt="SKU">
-                  <div class="pack-label">TEM PHỤ VIỆT</div>
-                </div>
-                <!-- Simulated Text Hook Freeze Frame Overlay -->
-                <div id="ls-postprod-hook-overlay"
-                  style="position: absolute; top: 22%; left: 8%; right: 8%; background: rgba(0, 0, 0, 0.82); border: 2px solid #00d2ff; border-radius: 10px; padding: 12px 14px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.7); display: none; z-index: 15;">
-                  <div
-                    style="font-size: 0.65rem; font-weight: 800; color: #00d2ff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
-                    ⚡ HOOK MỞ ĐẦU (2-3S FREEZE FRAME)
-                  </div>
-                  <div id="ls-postprod-hook-preview-txt"
-                    style="font-size: 0.88rem; font-weight: 800; color: #ffffff; line-height: 1.35;">
-                    "Duy nhất phiên live hôm nay, Retinol Farmstay trợ giá 299k!"
-                  </div>
-                </div>
-
-                <!-- TikTok Safe Zone Caption Overlay (Đồng bộ thời gian thực theo ô edit phụ đề bên dưới) -->
-                <div id="ls-postprod-caption-overlay"
-                  style="position: absolute; bottom: 20%; left: 6%; right: 6%; background: rgba(0, 0, 0, 0.78); border-radius: 8px; padding: 8px 12px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.6); z-index: 14; pointer-events: none; border-left: 3px solid #ffcc00; backdrop-filter: blur(4px);">
-                  <div style="font-size: 0.62rem; font-weight: 800; color: #ffcc00; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px;">
-                    💬 PHỤ ĐỀ KINETIC (TIKTOK SAFE ZONE)
-                  </div>
-                  <div id="ls-postprod-caption-overlay-text"
-                    style="font-size: 0.82rem; font-weight: 700; color: #ffffff; line-height: 1.35;">
-                    "Duy nhất trong phiên live hôm nay, hũ kem Retinol Farmstay 100ml trợ giá còn 299k."
-                  </div>
-                </div>
-              </div>
-
-              <!-- HỘP CẤU HÌNH HẬU KỲ CHUYÊN SÂU -->
-              <div class="glass-card" style="padding: 1.15rem 1.25rem; margin-top: 0.85rem;">
-
-                <!-- 1. CẤU HÌNH CÂU HOOK MỞ ĐẦU (TODO23 ITEM 3 & SCOPE PHASE 1 MỤC I.4 & I.5) -->
-                <div class="hook-config-card">
-                  <div
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.55rem;">
-                    <label
-                      style="font-size: 0.78rem; font-weight: 700; color: var(--text-main); text-transform: uppercase;">
-                      1. Cấu Hình Hook Mở Đầu (1–5s):
-                    </label>
-                    <button class="btn btn-outline btn-xs" id="btn-pick-hook-from-vault" type="button"
-                      style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--xcorp-blue-600); border-color: var(--xcorp-blue-300);">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                      </svg>
-                      <span>Chọn Từ Kho Hook</span>
+            <!-- CỘT PHẢI: BẢNG CẤU HÌNH HẬU KỲ CHUYÊN SÂU (MATCHING SCREENSHOT 1) -->
+            <div class="xcorp-settings-col">
+              <div class="xcorp-settings-card">
+                <!-- Section 1: Hook Mở Đầu -->
+                <div class="xcorp-settings-section">
+                  <div class="xcorp-settings-section-header">
+                    <span class="xcorp-settings-title">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                      Hook mở đầu
+                    </span>
+                    <button type="button" class="btn-company-ghost" style="padding: 2px 6px; font-size: 0.74rem;" id="btn-pick-hook-from-vault">
+                      + Nhập thủ công
                     </button>
                   </div>
+                  <select class="xcorp-select-track" id="ls-select-hook-option">
+                    <option value="" selected>Chọn câu từ Kho Hook</option>
+                    <option value="1">"Duy nhất phiên live hôm nay, Retinol Farmstay trợ giá 299k!"</option>
+                    <option value="2">"Ai bảo da mụn thì không được thoa kem chống nắng nâng tone?"</option>
+                    <option value="3">"Serum vàng K-Beauty: Mờ thâm sạm chỉ sau 14 ngày test lâm sàng"</option>
+                  </select>
+                </div>
 
-                  <!-- Text Hook Input -->
-                  <div style="margin-bottom: 0.65rem;">
-                    <textarea class="form-textarea" id="ls-postprod-hook-input" rows="2"
-                      style="width: 100%; font-size: 0.8rem; font-weight: 600;"
-                      placeholder="Nhập hoặc chỉnh sửa câu Text Hook mở đầu cho video...">Duy nhất phiên live hôm nay, Retinol Farmstay trợ giá 299k!</textarea>
+                <!-- Section 2: Âm thanh & Phụ đề -->
+                <div class="xcorp-settings-section">
+                  <div class="xcorp-settings-section-header">
+                    <span class="xcorp-settings-title">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                      Âm thanh &amp; phụ đề
+                    </span>
                   </div>
 
-                  <!-- Toggle Giọng Đọc AI Mồi Hook (Scope Phase 1) -->
-                  <div
-                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 8px; margin-bottom: 0.5rem;">
-                    <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main);">Giọng Đọc AI Mồi Hook
-                        (AI Voiceover 2–3s)</div>
-                    </div>
-                    <label class="clean-switch" style="flex-shrink: 0;">
-                      <input type="checkbox" id="ls-toggle-hook-voiceover" checked>
-                      <span class="clean-slider"></span>
+                  <!-- Tắt giọng gốc -->
+                  <div class="xcorp-settings-toggle-row">
+                    <span class="xcorp-toggle-label">
+                      Tắt giọng gốc
+                      <span class="xcorp-info-hint" title="Giữ hoặc tắt tiếng streamer trực tiếp">ⓘ</span>
+                    </span>
+                    <label class="xcorp-switch">
+                      <input type="checkbox" id="ls-toggle-mute-voice" checked>
+                      <span class="xcorp-switch-slider"></span>
                     </label>
                   </div>
-                </div>
 
-                <!-- 2. CẤU HÌNH ÂM THANH & NHẠC NỀN & PHỤ ĐỀ (TODO23 ITEM 1, 2, 7) -->
-                <div
-                  style="margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-default);">
-                  <label
-                    style="font-size: 0.78rem; font-weight: 700; color: var(--text-main); text-transform: uppercase; margin-bottom: 0.55rem; display: block;">
-                    2. Cấu Hình Xử Lý Âm Thanh & Lồng Nhạc Nền:
-                  </label>
-                  <div style="display: flex; flex-direction: column; gap: 0.55rem;">
-                    <!-- Toggle 1: Giữ Giọng Gốc Streamer (Todo23 Item 1 - Bỏ chữ 'giữ giọng' trên toggle) -->
-                    <div
-                      style="display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0.8rem; background: var(--bg-surface-subtle); border: 1px solid var(--border-default); border-radius: 8px; gap: 0.75rem;">
-                      <div style="flex: 1; min-width: 0;">
-                        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">Giữ Giọng Gốc
-                          Streamer</div>
-                      </div>
-                      <label class="clean-switch" style="flex-shrink: 0;">
-                        <input type="checkbox" id="ls-toggle-voice" checked>
-                        <span class="clean-slider"></span>
-                      </label>
-                    </div>
-
-                    <!-- Toggle 2: Lồng nhạc nền từ kho (Todo23 Item 2 - Bỏ chữ 'CÓ NHẠC' trên toggle) -->
-                    <div
-                      style="display: flex; flex-direction: column; padding: 0.55rem 0.8rem; background: var(--bg-surface-subtle); border: 1px solid var(--border-default); border-radius: 8px; gap: 0.5rem;">
-                      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
-                        <div style="flex: 1; min-width: 0;">
-                          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">Lồng nhạc nền từ
-                            kho</div>
-                        </div>
-                        <label class="clean-switch" style="flex-shrink: 0;">
-                          <input type="checkbox" id="ls-toggle-bgm" checked>
-                          <span class="clean-slider"></span>
-                        </label>
-                      </div>
-                      <!-- Dropdown chọn bản nhạc từ Kho BGM & Audio Ducking -->
-                      <div id="ls-bgm-picker-row" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <select class="form-select" id="ls-select-bgm-track"
-                          style="font-size: 0.74rem; padding: 4px 8px; flex: 1;">
-                          <option value="BGM_01" selected>K-Beauty Soft Glow Ambient (Nhẹ Nhàng / Skincare)</option>
-                          <option value="BGM_02">Seoul Flash Deal Countdown Beat (Sôi Động / Bán Hàng)</option>
-                          <option value="BGM_03">Trending Summer Glow Up TikTok (Trending TikTok)</option>
-                        </select>
-                        <span class="badge-tag"
-                          style="font-size: 0.65rem; background: var(--bg-surface); color: var(--text-muted); white-space: nowrap;">
-                          Ducking Tự Động
-                        </span>
-                      </div>
-                    </div>
-
-                    <!-- Toggle 3: Phụ Đề Trực Tiếp & Trích Đoạn Phụ Đề Từ Transcript (Todo26 Item 3) -->
-                    <div
-                      style="display: flex; flex-direction: column; padding: 0.75rem 0.85rem; background: var(--bg-surface-subtle); border: 1px solid var(--border-default); border-radius: 8px; gap: 0.65rem;">
-                      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
-                        <div style="flex: 1; min-width: 0;">
-                          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">
-                            Phụ Đề Trực Tiếp (Captions - TikTok Safe Zone)
-                          </div>
-                          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 1px;">
-                            Tự động trích câu thoại từ Transcript ASR đã duyệt ở Bước 1
-                          </div>
-                        </div>
-                        <label class="clean-switch" style="flex-shrink: 0;">
-                          <input type="checkbox" id="ls-caption-switch" checked>
-                          <span class="clean-slider"></span>
-                        </label>
-                      </div>
-
-                      <!-- Subtitle Editor Box (Todo26 Item 3) -->
-                      <div id="ls-postprod-subtitle-box" style="padding: 0.75rem 0.85rem; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 8px; margin-top: 2px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem; flex-wrap: wrap; gap: 0.4rem;">
-                          <div style="display: flex; align-items: center; gap: 6px;">
-                            <span style="font-size: 0.76rem; font-weight: 700; color: var(--text-main);">
-                              Trích Đoạn Phụ Đề Của Clip Này:
-                            </span>
-                            <span id="ls-sub-clip-timerange" class="badge-tag" style="background: rgba(22, 119, 255, 0.08); color: var(--xcorp-blue-600); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;">
-                              00:14:20 – 00:14:55
-                            </span>
-                          </div>
-                          <button class="btn btn-outline btn-xs" id="btn-resync-clip-subtitle" type="button" style="font-size: 0.68rem; color: var(--xcorp-blue-600); border-color: var(--xcorp-blue-300); display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px;">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                            <span>Trích Lại Từ Transcript</span>
-                          </button>
-                        </div>
-
-                        <!-- Editable Subtitle Textarea -->
-                        <div style="margin-bottom: 0.4rem;">
-                          <textarea class="form-textarea" id="ls-postprod-caption-editor" rows="2"
-                            style="width: 100%; font-size: 0.8rem; font-weight: 600; line-height: 1.45;"
-                            placeholder="Nhập hoặc chỉnh sửa phụ đề hiển thị cho clip này..."></textarea>
-                        </div>
-
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; color: var(--text-muted);">
-                          <span id="ls-caption-char-count">Đã nạp câu thoại</span>
-                          <span style="color: #10b981; font-weight: 600;">✓ Đồng bộ preview TikTok Safe Zone</span>
-                        </div>
-                      </div>
-                    </div>
+                  <!-- Nhạc nền -->
+                  <div class="xcorp-settings-toggle-row">
+                    <span class="xcorp-toggle-label">Nhạc nền</span>
+                    <label class="xcorp-switch">
+                      <input type="checkbox" id="ls-toggle-bgm" checked>
+                      <span class="xcorp-switch-slider"></span>
+                    </label>
                   </div>
-                </div>
 
-                <!-- 3. KHUNG HÌNH BÌA (COVER THUMBNAIL) -->
-                <div style="margin-bottom: 1rem;">
-                  <label
-                    style="font-size: 0.78rem; font-weight: 700; color: var(--text-main); text-transform: uppercase; margin-bottom: 0.55rem; display: block;">
-                    3. Khung Hình Bìa (Cover Thumbnail 9:16):
-                  </label>
-                  <div class="cover-frame-picker-card">
-                    <div class="cover-frame-thumb-box" style="flex-shrink: 0;">
-                      <img id="ls-cover-preview-img" src="media/image/farmstay_retinol_table.jpg" alt="Cover Frame">
-                      <div class="cover-frame-badge">BÌA 9:16</div>
-                    </div>
-                    <div class="cover-frame-info" style="flex: 1; min-width: 0;">
-                      <div class="cover-frame-title">Khung Hình Bìa</div>
-                      <div class="cover-frame-desc">
-                        Ảnh đại diện video trên feed TikTok • Mốc: <strong id="ls-cover-timestamp-text"
-                          style="color: var(--xcorp-blue-600); font-family: var(--font-mono);">00:14:20</strong>
-                      </div>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" id="btn-pick-ls-cover-frame" type="button"
-                      style="font-size: 0.75rem; padding: 6px 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;"
-                      title="Lấy khung hình video đang xem làm ảnh bìa">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                        <circle cx="12" cy="13" r="4" />
-                      </svg>
-                      <span>Chụp Frame Này</span>
-                    </button>
+                  <!-- Phát nhạc cả trong Hook -->
+                  <div class="xcorp-settings-toggle-row">
+                    <span class="xcorp-toggle-label">
+                      Phát nhạc cả trong Hook
+                      <span class="xcorp-info-hint" title="Bật nhạc xuyên suốt từ giây đầu tiên">ⓘ</span>
+                    </span>
+                    <label class="xcorp-switch">
+                      <input type="checkbox" id="ls-toggle-bgm-hook">
+                      <span class="xcorp-switch-slider"></span>
+                    </label>
                   </div>
-                </div>
 
-                <!-- 4. NÚT TIẾN HÀNH HẬU KỲ & TẠO DỰ ÁN (XONG STEP 4 -> CHUYỂN SANG PROJECTS HUB) -->
-                <div>
-                  <button class="btn btn-primary" id="btn-start-postprod-render"
-                    style="width: 100%; justify-content: center; height: 46px; font-size: 0.92rem; font-weight: 700; white-space: normal; text-align: center; box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45); background: linear-gradient(135deg, #0284c7, #00d2ff); border: none; color: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                      <polyline points="2 17 12 22 22 17"></polyline>
-                      <polyline points="2 12 12 17 22 12"></polyline>
-                    </svg>
-                    <span>Tiến Hành Hậu Kỳ (<span id="btn-postprod-count-txt">3</span> Clip)</span>
+                  <!-- Audio Selector -->
+                  <select class="xcorp-select-track" id="ls-select-bgm-track">
+                    <option selected>backgroundmusicmaster pixel adventure 382649.mp3</option>
+                    <option>K-Beauty Soft Glow Ambient (Nhẹ Nhàng / Skincare)</option>
+                    <option>Seoul Flash Deal Countdown Beat (Sôi Động / Bán Hàng)</option>
+                  </select>
+
+                  <!-- Waveform Scrubber Component (Matching Screenshot 1) -->
+                  <div class="xcorp-waveform-container">
+                    <div class="xcorp-waveform-track-wrap">
+                      <div class="xcorp-waveform-bars-box" id="waveform-bars-box">
+                        <!-- Bars dynamically rendered -->
+                        <span class="xcorp-waveform-bar" style="height: 12px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 18px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 28px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 38px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 22px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 32px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 42px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 30px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 16px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 26px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 36px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 46px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 28px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 34px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 40px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 25px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 18px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 32px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 44px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 36px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 20px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 28px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 38px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 48px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 30px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 24px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 34px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 40px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 22px;"></span>
+                        <span class="xcorp-waveform-bar" style="height: 16px;"></span>
+                        <!-- Active blue selection frame -->
+                        <div class="xcorp-waveform-active-frame"></div>
+                      </div>
+                      <button type="button" class="xcorp-waveform-play-btn" id="btn-waveform-play" title="Nghe thử đoạn nhạc">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                      </button>
+                    </div>
+                    <div class="xcorp-waveform-time">0:00 / 2:18</div>
+                  </div>
+
+                  <!-- Volume Range Slider -->
+                  <div class="xcorp-volume-row">
+                    <span class="xcorp-volume-label">Âm lượng nhạc nền</span>
+                    <input type="range" class="xcorp-volume-range" min="0" max="100" value="40" id="ls-bgm-volume-slider">
+                    <span class="xcorp-volume-val" id="ls-bgm-volume-text">40%</span>
+                  </div>
+
+                  <!-- Tải nhạc nền Button -->
+                  <button type="button" class="btn-company-secondary" style="width: 100%; margin-bottom: 12px; height: 32px; font-size: 0.8rem; font-weight: 700;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span>Tải nhạc nền</span>
                   </button>
+
+                  <!-- Chèn phụ đề Toggle -->
+                  <div class="xcorp-settings-toggle-row" style="margin-bottom: 0;">
+                    <span class="xcorp-toggle-label">Chèn phụ đề</span>
+                    <label class="xcorp-switch">
+                      <input type="checkbox" id="ls-caption-switch" checked>
+                      <span class="xcorp-switch-slider"></span>
+                    </label>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
 
+          <!-- STICKY BOTTOM ACTION BAR (MATCHING SCREENSHOT 1 - 3 STEPS) -->
+          <div class="xcorp-bottom-action-bar">
+            <button type="button" class="btn-company-secondary" onclick="window.showLsStep(2)">
+              ← Quay lại
+            </button>
+            <div class="xcorp-bottom-btn-group-right">
+              <button type="button" class="btn-company-secondary" onclick="window.completeAndSaveLivestreamClips()">
+                Hoàn tất phiên &amp; lưu kho
+              </button>
+              <button type="button" class="btn-company-primary" id="btn-start-postprod-render" onclick="window.completeAndSaveLivestreamClips()">
+                Tiến hành hậu kỳ
+              </button>
             </div>
           </div>
         </div>

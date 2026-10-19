@@ -673,8 +673,11 @@
       setupProjectsHubHandlers();
       renderProjectsHub();
 
-      // Switch to default panel: Studio Hub (Home Page)
-      switchPanel('panel-home-hub');
+      // Switch to default panel: Cắt Highlight Live (matching target demo)
+      switchPanel('panel-livestream');
+      if (typeof window.showLsStep === 'function') {
+        window.showLsStep(3);
+      }
 
       showToast('Nền tảng Xcorp Video AI SaaS Studio sẵn sàng phục vụ', 'info');
     } catch (err) {
@@ -814,22 +817,38 @@
 
     state.activePanel = panelId;
 
-    // Toggle active state on HeyGen Navigation buttons
-    document.querySelectorAll('.heygen-nav-btn').forEach(btn => {
-      const isActive = btn.getAttribute('data-panel') === panelId;
+    // Toggle active state on Navigation buttons
+    document.querySelectorAll('.xcorp-nav-item, .heygen-nav-btn').forEach(btn => {
+      const btnPanel = btn.getAttribute('data-panel');
+      const isActive = btnPanel === panelId ||
+        ((panelId === 'panel-project-clips' || panelId === 'panel-clip-detail') && (btnPanel === 'panel-project-clips' || btnPanel === 'panel-projects-hub'));
       btn.classList.toggle('active', isActive);
     });
 
-    const navItems = document.querySelectorAll('.sidebar-nav-item');
-    let matchedItem = null;
-    navItems.forEach(item => {
-      const isActive = item.getAttribute('data-panel') === panelId ||
-        ((panelId === 'panel-project-clips' || panelId === 'panel-clip-detail') && item.getAttribute('data-panel') === 'panel-projects-hub');
-      item.classList.toggle('active', isActive);
-      if (isActive) {
-        matchedItem = item;
+    // Update Topbar Breadcrumbs (Matching Screenshots 1 & 2)
+    const breadcrumbTitleEl = document.getElementById('topbar-breadcrumb-title');
+    const breadcrumbParentEl = document.getElementById('topbar-breadcrumb-parent');
+    if (breadcrumbTitleEl) {
+      if (panelId === 'panel-livestream') {
+        if (breadcrumbParentEl) breadcrumbParentEl.textContent = 'SIU TEST';
+        breadcrumbTitleEl.textContent = 'CẮT HIGHLIGHT LIVE';
+      } else if (panelId === 'panel-projects-hub') {
+        if (breadcrumbParentEl) breadcrumbParentEl.textContent = 'SIU TEST';
+        breadcrumbTitleEl.textContent = 'PROJECTS';
+      } else if (panelId === 'panel-project-clips' || panelId === 'panel-clip-detail') {
+        if (breadcrumbParentEl) breadcrumbParentEl.textContent = 'SIU TEST > PROJECT';
+        breadcrumbTitleEl.textContent = 'VIDEO CLIPS';
+      } else if (panelId === 'panel-multi-engine') {
+        if (breadcrumbParentEl) breadcrumbParentEl.textContent = 'SIU TEST';
+        breadcrumbTitleEl.textContent = 'DỰNG VIDEO TỪ ẢNH';
+      } else if (panelId === 'panel-raw-editor') {
+        if (breadcrumbParentEl) breadcrumbParentEl.textContent = 'SIU TEST';
+        breadcrumbTitleEl.textContent = 'CHỈNH SỬA TỪ VIDEO GỐC';
+      } else if (panelId === 'panel-assets-hub') {
+        if (breadcrumbParentEl) breadcrumbParentEl.textContent = 'SIU TEST';
+        breadcrumbTitleEl.textContent = 'ASSET';
       }
-    });
+    }
 
     // Update topbar suite dynamically
     const topbarSuiteEl = document.getElementById('topbar-current-suite');
@@ -5951,22 +5970,9 @@
   }
 
   function showToast(message, type = 'info') {
-    if (!DOM.toastContainer) return;
-
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    const icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : (type === 'warning' ? '⚠️' : 'ℹ️'));
-    toast.innerHTML = `<span style="font-size: 1rem;">${icon}</span> <span>${message}</span>`;
-    DOM.toastContainer.appendChild(toast);
-
-    setTimeout(() => {
-      toast.classList.add('fade-out');
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast);
-        }
-      }, 300);
-    }, 3200);
+    // Suppressed corner toast pop-ups per user request
+    console.log(`[Toast ${type}]: ${message}`);
+    return;
   }
 
   /* ==========================================================================
@@ -6332,6 +6338,11 @@
     // Step 2: Enter Workspace
     if (DOM.btnEnterWorkspace) {
       DOM.btnEnterWorkspace.addEventListener('click', enterWorkspace);
+    }
+
+    // Auto bypass login if URL specifies ?direct=1 or #studio
+    if (window.location.search.includes('direct=1') || window.location.hash.includes('studio') || window.location.search.includes('skip_login=1')) {
+      enterWorkspace();
     }
   }
 
@@ -9483,6 +9494,96 @@
     }
   }
 
+
+  /* ==========================================================================
+     COMPANY XCORP WORKSPACE HELPERS (STEPPER, VOLUME, PREVIEWS)
+     ========================================================================== */
+  window.showLsStep = function(stepNum) {
+    const views = {
+      1: 'ls-upload-state-view',
+      2: 'ls-results-state-view',
+      3: 'ls-postprod-state-view'
+    };
+
+    ['ls-upload-state-view', 'ls-results-state-view', 'ls-postprod-state-view', 'ls-completed-state-view'].forEach(vId => {
+      const el = document.getElementById(vId);
+      if (el) el.style.display = (vId === views[stepNum]) ? 'block' : 'none';
+    });
+
+    const steps = [1, 2, 3];
+    const labels = { 1: 'Nạp video', 2: 'Cắt clip', 3: 'Hậu kỳ' };
+    steps.forEach(s => {
+      const stepEl = document.getElementById('ls-pipe-step-' + s);
+      if (!stepEl) return;
+      stepEl.className = 'xcorp-step-item';
+      if (s < stepNum) {
+        stepEl.classList.add('completed');
+        stepEl.innerHTML = `<span class="xcorp-step-badge-done">✓</span><span>${labels[s]}</span>${s < 3 ? '<span class="xcorp-step-slash">/</span>' : ''}`;
+      } else if (s === stepNum) {
+        stepEl.classList.add('active');
+        stepEl.innerHTML = `<span class="xcorp-step-badge-active">${s}</span><span>${labels[s]}</span>${s < 3 ? '<span class="xcorp-step-slash">/</span>' : ''}`;
+      } else {
+        stepEl.classList.add('pending');
+        stepEl.innerHTML = `<span class="xcorp-step-badge-pending">${s}</span><span>${labels[s]}</span>${s < 3 ? '<span class="xcorp-step-slash">/</span>' : ''}`;
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.completeAndSaveLivestreamClips = function() {
+    switchPanel('panel-projects-hub');
+  };
+
+  window.selectPostprodClip = function(idx) {
+    document.querySelectorAll('.xcorp-clip-card').forEach((card, i) => {
+      const isTarget = (i + 1) === idx;
+      card.classList.toggle('selected', isTarget);
+      const chk = card.querySelector('.xcorp-clip-checkbox');
+      if (chk) chk.checked = isTarget;
+      const btn = card.querySelector('.xcorp-btn-preview');
+      if (btn) {
+        btn.className = isTarget ? 'xcorp-btn-preview primary' : 'xcorp-btn-preview outline';
+      }
+    });
+  };
+
+  window.previewPostprodClip = function(idx) {
+    window.selectPostprodClip(idx);
+    if (typeof showToast === 'function') {
+      showToast(`Đang nạp Clip 0${idx} vào trình chiếu TikTok 9:16`, 'info');
+    }
+  };
+
+  // Wire volume range slider
+  document.addEventListener('DOMContentLoaded', () => {
+    const volSlider = document.getElementById('ls-bgm-volume-slider');
+    const volText = document.getElementById('ls-bgm-volume-text');
+    if (volSlider && volText) {
+      volSlider.addEventListener('input', (e) => {
+        volText.textContent = `${e.target.value}%`;
+      });
+    }
+
+    // Toggle collapse sidebar
+    const btnCollapse = document.getElementById('btn-collapse-sidebar');
+    const sidebar = document.getElementById('heygen-sidebar');
+    if (btnCollapse && sidebar) {
+      btnCollapse.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+      });
+    }
+
+    // Accordion Asset section
+    const assetHeader = document.getElementById('header-assets-accordion');
+    const assetSubMenu = document.getElementById('assets-sub-menu-list');
+    if (assetHeader && assetSubMenu) {
+      assetHeader.addEventListener('click', () => {
+        const isHidden = assetSubMenu.style.display === 'none';
+        assetSubMenu.style.display = isHidden ? 'flex' : 'none';
+      });
+    }
+  });
 
   // Init completed gallery handlers inside init()
   // setupCompletedGalleryEventHandlers();

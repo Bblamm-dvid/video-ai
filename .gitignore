@@ -12,6 +12,10 @@ node_modules/
 *.pre_heygen.bak
 *.tmp
 *~
+prototype-backup-pre-company-style/
+video-ai/prototype-backup-pre-company-style/
+scratch/
+video-ai/scratch/
 
 # Environment variables
 .env
