@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "site": "ai-video-making",
+    "public": "prototype",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/*.bak*"
+    ]
+  }
+}

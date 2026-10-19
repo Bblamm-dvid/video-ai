@@ -1,0 +1,5 @@
+*.bak
+*.bak_*
+*.pre_heygen.bak
+server.js
+README.md

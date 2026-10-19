@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Deploy & Framework cache
+.vercel/
+.firebase/
+.cache/
+
+# Backup & scratch temp files
+*.bak
+*.bak*
+*.pre_heygen.bak
+*.tmp
+*~
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Operating System files
+Thumbs.db
+.DS_Store
+Desktop.ini
