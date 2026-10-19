@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/video-ai/prototype/$1"
+    }
+  ]
+}
