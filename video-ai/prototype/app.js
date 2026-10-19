@@ -855,6 +855,10 @@
       const activeTab = activeTabBtn ? activeTabBtn.getAttribute('data-asset-tab') : 'products';
       switchAssetSubTab(activeTab);
     }
+
+    if (typeof updateFloatingSelectionBar === 'function') {
+      updateFloatingSelectionBar();
+    }
   }
 
   function switchAssetSubTab(tabName) {
@@ -7289,6 +7293,7 @@
   }
 
   let selectedProjectIds = new Set();
+  let selectedClipIds = new Set();
 
   function escapeProjectHtml(str) {
     if (!str) return '';
@@ -7324,26 +7329,24 @@
     // Rule: Không hiện thời gian ở ngoài parent card đối với nhãn Highlight!
     const showDurationBadge = (tag !== 'Highlight') && p.duration;
 
-    // Status pill ở góc trên card
+    // Group 2: Tệp cha = Highlight đã hoàn thành
+    const isParentFolder = tag === 'Highlight' && (p.isCompleted || p.statusCode === 'completed');
+    const parentClipCount = isParentFolder ? (p.clips ? p.clips.length : (p.clipsCount || 0)) : 0;
+
+    // Group 1 & 3: Status pill — bỏ processing pill và bỏ clip count pill trên Highlight
     let statusPillHTML = '';
-    if (tag === 'Highlight') {
-      if (p.isCompleted || p.statusCode === 'completed') {
-        const cCount = p.clips ? p.clips.length : (p.clipsCount || 6);
-        statusPillHTML = `<span class="project-card-status-pill completed">📁 ${cCount} clips</span>`;
-      } else if (isProcessing) {
-        statusPillHTML = `<span class="project-card-status-pill processing" style="background: rgba(245, 158, 11, 0.16); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);">⏳ ${progressPercent}%</span>`;
-      } else {
-        const stepTxt = p.stepLabel || (`Bước ${p.currentStep || 3}: Đang xử lý`);
-        statusPillHTML = `<span class="project-card-status-pill">⚡ ${escapeProjectHtml(stepTxt)}</span>`;
-      }
-    } else if (isProcessing) {
-      statusPillHTML = `<span class="project-card-status-pill processing" style="background: rgba(245, 158, 11, 0.16); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);">⏳ ${progressPercent}%</span>`;
+    if (isProcessing) {
+      // Group 1: Bỏ pill khi đang xử lý — chỉ giữ gem+bar bên trong poster
+      statusPillHTML = '';
+    } else if (isParentFolder) {
+      // Group 3: Bỏ hoàn toàn clip count pill trên Highlight completed
+      statusPillHTML = '';
     } else if (p.stepLabel) {
       statusPillHTML = `<span class="project-card-status-pill ${p.statusCode === 'completed' ? 'completed' : ''}">${escapeProjectHtml(p.stepLabel)}</span>`;
     }
 
     return `
-      <div class="project-card-item ${isSelected ? 'selected' : ''} ${isProcessing ? 'processing' : ''}" data-project-id="${p.id}">
+      <div class="project-card-item ${isSelected ? 'selected' : ''} ${isProcessing ? 'processing' : ''} ${isParentFolder ? 'is-parent-folder' : ''} ${p.isDriveSaved ? 'is-drive-saved' : ''}" data-project-id="${p.id}">
         <!-- Poster / Preview Container -->
         <div class="project-card-poster-wrap" onclick="window.openProjectWorkflow('${p.id}')">
           ${p.thumbnail ? `
@@ -7400,12 +7403,22 @@
               <span>Copy ID</span>
             </button>
 
+            ${p.isDriveSaved ? `
+            <button type="button" class="project-dropdown-item" onclick="event.stopPropagation(); window.pullFromDrive('${p.id}')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+                <path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+              </svg>
+              <span>Mở lại phiên làm việc</span>
+            </button>
+            ` : `
             <button type="button" class="project-dropdown-item" onclick="event.stopPropagation(); window.toggleProjectDriveSave('${p.id}')">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
               </svg>
-              <span>${p.isDriveSaved ? 'Bỏ lưu Drive' : 'Lưu vào Drive (Lưu Kho)'}</span>
+              <span>Lưu tất cả vào Drive (Hoàn tất)</span>
             </button>
+            `}
 
             <button type="button" class="project-dropdown-item" onclick="event.stopPropagation(); window.renameProject('${p.id}')">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -7476,6 +7489,17 @@
             <div class="project-card-play-hover-btn">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             </div>
+            ${isParentFolder ? `
+              <div class="project-card-folder-hover-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div class="project-card-folder-count-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+                ${parentClipCount} clips
+              </div>
+            ` : ''}
             ${showDurationBadge ? `<span class="project-card-duration-badge">${p.duration}</span>` : ''}
           `}
 
@@ -7510,21 +7534,159 @@
   }
 
   // FLOATING SELECTION ACTION BAR STATE SYNC
+  function getSelectionContext() {
+    if (state.activePanel === 'panel-project-clips') return 'clips';
+    if (state.activePanel === 'panel-projects-hub') return 'projects';
+    return 'none';
+  }
+
   function updateFloatingSelectionBar() {
     const fsb = document.getElementById('floating-selection-bar');
     const countEl = document.getElementById('fsb-selected-count');
+    const selectAllBtn = document.getElementById('fsb-btn-select-all');
+    const moveBtn = document.getElementById('fsb-btn-move');
+    const driveBtn = document.getElementById('fsb-btn-drive');
     if (!fsb) return;
 
-    const count = selectedProjectIds.size;
-    if (count > 0) {
-      if (countEl) {
-        countEl.textContent = `${count} item${count > 1 ? 's' : ''} selected`;
+    const ctx = getSelectionContext();
+
+    if (ctx === 'projects') {
+      const count = selectedProjectIds.size;
+      if (count > 0) {
+        if (countEl) countEl.textContent = `${count} item${count > 1 ? 's' : ''} selected`;
+        const totalProjects = (window.PROTOTYPE_VIDEO_PROJECTS || []).length;
+        if (selectAllBtn) {
+          selectAllBtn.textContent = (count === totalProjects && totalProjects > 0) ? 'Deselect All' : 'Select All';
+        }
+        if (moveBtn) moveBtn.style.display = 'inline-flex';
+        if (driveBtn) driveBtn.style.display = 'inline-flex';
+        fsb.style.display = 'flex';
+      } else {
+        fsb.style.display = 'none';
       }
-      fsb.style.display = 'flex';
+    } else if (ctx === 'clips') {
+      const count = selectedClipIds.size;
+      if (count > 0) {
+        if (countEl) countEl.textContent = `${count} clip${count > 1 ? 's' : ''} selected`;
+        const clips = activeProjectClips ? (getProjectClipsData(activeProjectClips) || []) : [];
+        if (selectAllBtn) {
+          selectAllBtn.textContent = (count === clips.length && clips.length > 0) ? 'Deselect All' : 'Select All';
+        }
+        if (moveBtn) moveBtn.style.display = 'none';
+        if (driveBtn) driveBtn.style.display = 'inline-flex';
+        fsb.style.display = 'flex';
+      } else {
+        fsb.style.display = 'none';
+      }
     } else {
       fsb.style.display = 'none';
     }
   }
+
+  // UNIFIED FLOATING SELECTION ACTION HANDLERS
+  window.fsbHandleSelectAll = function() {
+    const ctx = getSelectionContext();
+    if (ctx === 'clips') {
+      const clips = activeProjectClips ? (getProjectClipsData(activeProjectClips) || []) : [];
+      if (selectedClipIds.size === clips.length && clips.length > 0) {
+        selectedClipIds.clear();
+      } else {
+        clips.forEach(c => selectedClipIds.add(c.id));
+      }
+      if (activeProjectClips) renderProjectClipsGrid(activeProjectClips);
+      updateFloatingSelectionBar();
+      if (typeof showToast === 'function') {
+        showToast(selectedClipIds.size > 0 ? `Đã chọn tất cả ${selectedClipIds.size} clip.` : 'Đã bỏ chọn tất cả clip.', 'info');
+      }
+    } else {
+      window.selectAllProjects();
+    }
+  };
+
+  window.fsbHandleMove = function() {
+    const ctx = getSelectionContext();
+    if (ctx === 'clips') {
+      // Not applicable for clips
+    } else {
+      window.batchMoveSelectedProjects();
+    }
+  };
+
+  window.fsbHandleDrive = function() {
+    const ctx = getSelectionContext();
+    if (ctx === 'clips') {
+      if (selectedClipIds.size === 0) return;
+      const count = selectedClipIds.size;
+      if (activeProjectClips) {
+        const clips = getProjectClipsData(activeProjectClips);
+        clips.forEach(c => {
+          if (selectedClipIds.has(c.id)) {
+            c.isDriveSaved = true;
+          }
+        });
+        renderProjectClipsGrid(activeProjectClips);
+        setTimeout(() => {
+          selectedClipIds.forEach(cId => {
+            const card = document.querySelector(`.clip-card-item[onclick*="${cId}"]`);
+            if (card) {
+              card.classList.add('drive-sync-highlight');
+              setTimeout(() => card.classList.remove('drive-sync-highlight'), 1500);
+            }
+          });
+        }, 50);
+      }
+      if (typeof showToast === 'function') {
+        showToast(`Đã lưu ${count} clip đã chọn vào Google Drive thành công!`, 'success');
+      }
+    } else {
+      window.batchDriveSaveSelectedProjects();
+    }
+  };
+
+  window.fsbHandleDownload = function() {
+    const ctx = getSelectionContext();
+    if (ctx === 'clips') {
+      if (selectedClipIds.size === 0) return;
+      if (typeof showToast === 'function') {
+        showToast(`Đang đóng gói và tải xuống ${selectedClipIds.size} clip nổi bật đã chọn...`, 'success');
+      }
+    } else {
+      window.batchDownloadSelectedProjects();
+    }
+  };
+
+  window.fsbHandleDelete = function() {
+    const ctx = getSelectionContext();
+    if (ctx === 'clips') {
+      if (selectedClipIds.size === 0) return;
+      if (confirm(`Bạn có chắc chắn muốn xoá ${selectedClipIds.size} clip đã chọn không?`)) {
+        const count = selectedClipIds.size;
+        if (activeProjectClips) {
+          const clips = getProjectClipsData(activeProjectClips);
+          activeProjectClips.clips = clips.filter(c => !selectedClipIds.has(c.id));
+        }
+        selectedClipIds.clear();
+        if (activeProjectClips) renderProjectClipsGrid(activeProjectClips);
+        updateFloatingSelectionBar();
+        if (typeof showToast === 'function') {
+          showToast(`Đã xoá ${count} clip thành công.`, 'success');
+        }
+      }
+    } else {
+      window.batchDeleteSelectedProjects();
+    }
+  };
+
+  window.fsbHandleClose = function() {
+    const ctx = getSelectionContext();
+    if (ctx === 'clips') {
+      selectedClipIds.clear();
+      if (activeProjectClips) renderProjectClipsGrid(activeProjectClips);
+      updateFloatingSelectionBar();
+    } else {
+      window.clearAllSelectedProjects();
+    }
+  };
 
   // GLOBAL PROJECT CARD ACTIONS
   window.toggleProjectSelect = function(projectId, el) {
@@ -7539,11 +7701,15 @@
 
   window.selectAllProjects = function() {
     const currentList = window.PROTOTYPE_VIDEO_PROJECTS || [];
-    currentList.forEach(p => selectedProjectIds.add(p.id));
+    if (selectedProjectIds.size === currentList.length && currentList.length > 0) {
+      selectedProjectIds.clear();
+    } else {
+      currentList.forEach(p => selectedProjectIds.add(p.id));
+    }
     renderProjectsCards();
     updateFloatingSelectionBar();
     if (typeof showToast === 'function') {
-      showToast(`Đã chọn tất cả ${selectedProjectIds.size} dự án`, 'info');
+      showToast(selectedProjectIds.size > 0 ? `Đã chọn tất cả ${selectedProjectIds.size} dự án` : 'Đã bỏ chọn tất cả dự án', 'info');
     }
   };
 
@@ -7771,21 +7937,21 @@
       <div class="input-vault-header-banner" style="grid-column: 1 / -1;">
         <div>
           <div class="input-vault-banner-title">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: #0284c7;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: #0284c7;">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <span>Kho Tư Liệu Đầu Vào (Input Vault)</span>
+            <span>Kho Tư Liệu (Input Vault)</span>
           </div>
           <div class="input-vault-banner-desc">
-            Kho lưu trữ tập trung các dữ liệu thô ban đầu do user tải lên (video livestream TikTok, footage b-roll 4K, bộ ảnh SKU, audio thuyết minh). Các file này có thể đồng bộ lưu trữ trên Google Drive để bảo toàn dữ liệu và tái sử dụng trực tiếp trong các Studio dựng video.
+            Video gốc, footage & ảnh SKU sẵn sàng đưa vào studio dựng video.
           </div>
         </div>
         <div class="input-vault-banner-actions">
           <button class="btn btn-primary btn-sm" onclick="window.uploadNewInputSource()" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; padding: 7px 14px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-            <span>+ Tải Lên Tư Liệu Mới</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            <span>+ Tải Lên Tư Liệu</span>
           </button>
         </div>
       </div>
@@ -7794,11 +7960,11 @@
     if (items.length === 0) {
       grid.innerHTML = bannerHTML + `
         <div style="grid-column: 1 / -1; padding: 3rem 1rem; text-align: center; color: var(--text-muted);">
-          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 0.75rem; opacity: 0.5;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 0.5rem; opacity: 0.5;">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
           </svg>
-          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Chưa có file tư liệu đầu vào nào phù hợp bộ lọc</div>
-          <div style="font-size: 0.8rem;">Bấm "+ Tải Lên Tư Liệu Mới" để thêm video livestream, footage B-roll hoặc bộ ảnh SKU.</div>
+          <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Chưa có file tư liệu đầu vào</div>
+          <div style="font-size: 0.78rem;">Bấm "+ Tải Lên Tư Liệu" để thêm footage hoặc bộ ảnh sản phẩm.</div>
         </div>
       `;
       return;
@@ -7806,8 +7972,7 @@
 
     const cardsHTML = items.map(item => {
       const fileSize = item.size || item.fileSize || '1.2 GB';
-      const fileFormat = item.resolution || item.format || '1080p Full HD';
-      const relatedProject = item.associatedProjectName || item.relatedProjectName || '';
+      const fileFormat = item.resolution || item.format || '1080p';
 
       return `
       <div class="input-vault-card" data-input-id="${item.id}">
@@ -7847,13 +8012,6 @@
             <span>${escapeProjectHtml(item.uploadedAt)}</span>
           </div>
 
-          ${relatedProject ? `
-            <div class="input-vault-project-tag" title="Thuộc dự án: ${escapeProjectHtml(relatedProject)}">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10 15 5-3-5-3v6Z"/><rect width="20" height="20" x="2" y="2" rx="5"/></svg>
-              <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px;">Dự án: ${escapeProjectHtml(relatedProject)}</span>
-            </div>
-          ` : ''}
-
           <!-- Bottom Action Buttons -->
           <div class="input-vault-actions-row">
             <button type="button" class="btn btn-sm ${item.isDriveSaved ? 'btn-outline-secondary' : 'btn-outline-primary'}"
@@ -7861,7 +8019,7 @@
                     title="${item.isDriveSaved ? 'Gỡ file khỏi Google Drive' : 'Lưu trữ sao lưu file lên Google Drive'}"
                     style="font-size: 0.78rem; display: inline-flex; align-items: center; gap: 5px;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-              <span>${item.isDriveSaved ? 'Bỏ lưu Drive' : 'Lưu vào Drive'}</span>
+              <span>${item.isDriveSaved ? 'Bỏ lưu Drive' : 'Lưu Drive'}</span>
             </button>
             <button type="button" class="btn btn-primary btn-sm"
                     onclick="window.useInputInStudio('${item.id}')"
@@ -7878,20 +8036,87 @@
     grid.innerHTML = bannerHTML + cardsHTML;
   }
 
-  // GLOBAL PROJECT DRIVE TOGGLE ACTION
+  // GLOBAL PROJECT DRIVE TOGGLE ACTION (LƯU DRIVE / HOÀN TẤT PHIÊN)
   window.toggleProjectDriveSave = function(projectId) {
     document.querySelectorAll('.project-card-dropdown.open').forEach(dd => dd.classList.remove('open'));
     const proj = (window.PROTOTYPE_VIDEO_PROJECTS || []).find(p => p.id === projectId);
     if (!proj) return;
 
     proj.isDriveSaved = !proj.isDriveSaved;
+    if (proj.clips) {
+      proj.clips.forEach(c => { c.isDriveSaved = proj.isDriveSaved; });
+    }
     renderProjectsCards();
+
+    // Re-render clips session button & grid if active
+    if (activeProjectClips && activeProjectClips.id === projectId) {
+      if (typeof renderClipsSessionButton === 'function') {
+        renderClipsSessionButton(proj);
+      }
+      if (typeof renderProjectClipsGrid === 'function') {
+        renderProjectClipsGrid(proj);
+      }
+      if (proj.isDriveSaved) {
+        // Trigger highlight animation on all child clip cards!
+        setTimeout(() => {
+          document.querySelectorAll('.clip-card-item').forEach((card, idx) => {
+            setTimeout(() => {
+              card.classList.add('drive-sync-highlight');
+              setTimeout(() => card.classList.remove('drive-sync-highlight'), 1500);
+            }, idx * 50);
+          });
+        }, 60);
+      }
+    }
+
     if (typeof showToast === 'function') {
       if (proj.isDriveSaved) {
-        showToast(`Đã lưu dự án "${proj.name}" vào Google Drive (Lưu Kho Cloud thành công)`, 'success');
+        showToast(`Đã lưu toàn bộ ${proj.clips ? proj.clips.length : 8} clip của "${proj.name}" vào Google Drive (Hoàn tất phiên)`, 'success');
       } else {
-        showToast(`Đã gỡ dự án "${proj.name}" khỏi Google Drive`, 'info');
+        showToast(`Đã mở lại phiên làm việc cho "${proj.name}"`, 'info');
       }
+    }
+  };
+
+  // Group 4c: Mở lại phiên làm việc từ Drive → unlock edit clip
+  window.pullFromDrive = function(projectId) {
+    document.querySelectorAll('.project-card-dropdown.open').forEach(dd => dd.classList.remove('open'));
+    const proj = (window.PROTOTYPE_VIDEO_PROJECTS || []).find(p => p.id === projectId);
+    if (!proj) return;
+
+    if (!proj.isDriveSaved) {
+      if (typeof showToast === 'function') {
+        showToast('Phiên làm việc này đang hoạt động bình thường.', 'info');
+      }
+      return;
+    }
+
+    // Reopen session: remove drive lock
+    proj.isDriveSaved = false;
+    if (proj.clips) {
+      proj.clips.forEach(c => { c.isDriveSaved = false; });
+    }
+    renderProjectsCards();
+
+    // Update clips panel session button & grid
+    if (typeof renderClipsSessionButton === 'function') {
+      renderClipsSessionButton(proj);
+    }
+    if (typeof renderProjectClipsGrid === 'function' && activeProjectClips && activeProjectClips.id === projectId) {
+      renderProjectClipsGrid(proj);
+    }
+
+    // Update mini editor locked overlay in clip detail if open
+    const lockedOverlay = document.getElementById('clip-mini-editor-locked-overlay');
+    if (lockedOverlay) lockedOverlay.style.display = 'none';
+    const miniEditorBody = document.getElementById('clip-mini-editor-body-inner');
+    if (miniEditorBody) {
+      miniEditorBody.style.pointerEvents = 'auto';
+      miniEditorBody.style.opacity = '1';
+    }
+
+    if (typeof showToast === 'function') {
+      showToast(`Đã mở lại phiên làm việc cho "${proj.name}" — sẵn sàng chỉnh sửa clip!`, 'success');
     }
   };
 
@@ -8325,6 +8550,7 @@
 
     activeProjectClips = proj;
     state.activeProjectId = projectId;
+    selectedClipIds.clear();
 
     switchPanel('panel-project-clips');
 
@@ -8334,13 +8560,210 @@
     if (titleEl) titleEl.textContent = proj.name;
     if (metaEl) metaEl.textContent = `Created by you, ${proj.timeAgo || '13 minutes ago'}`;
 
+    // Render Session Drive Action Button (Lưu Drive vs Mở lại phiên làm việc)
+    renderClipsSessionButton(proj);
+
     renderProjectClipsGrid(proj);
+    updateFloatingSelectionBar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (typeof showToast === 'function') {
-      showToast(`Đã mở tệp dự án Highlight "${proj.name}"`, 'info');
+      showToast(`Đã mở tệp dự án Highlight "${proj.name}"${proj.isDriveSaved ? ' — Đã lưu Drive (chỉ xem)' : ''}`, 'info');
     }
   };
+
+  function renderClipsSessionButton(proj) {
+    const wrap = document.getElementById('clips-view-session-action-wrap');
+    if (!wrap || !proj) return;
+
+    if (proj.isDriveSaved) {
+      wrap.innerHTML = `
+        <button type="button" class="btn-reopen-session" onclick="window.pullFromDrive('${proj.id}')" title="Mở lại phiên làm việc để chỉnh sửa clip">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+          <span>Mở lại phiên làm việc</span>
+        </button>
+      `;
+    } else {
+      wrap.innerHTML = `
+        <button type="button" class="btn-save-session-drive" onclick="window.toggleProjectDriveSave('${proj.id}')" title="Lưu toàn bộ dự án và tất cả các clip vào Google Drive (Hoàn tất phiên)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+          </svg>
+          <span>Lưu tất cả vào Drive (Hoàn tất)</span>
+        </button>
+      `;
+    }
+  }
+
+  function createClipCardHTML(clip, isPlaying) {
+    const isSelected = selectedClipIds.has(clip.id);
+    const isDriveSaved = Boolean(clip.isDriveSaved || (activeProjectClips && activeProjectClips.isDriveSaved));
+    return `
+      <div class="clip-card-item ${isPlaying ? 'active-playing-clip' : ''} ${isSelected ? 'selected' : ''} ${isDriveSaved ? 'drive-saved' : ''}" onclick="window.openClipDetail('${clip.id}')" style="${isPlaying ? 'border-color: #00f5ff; box-shadow: 0 0 15px rgba(0, 245, 255, 0.25);' : ''}">
+        <div class="clip-card-poster-wrap">
+          <img src="${clip.thumbnail || 'media/image/farmstay_retinol_table.jpg'}" alt="${escapeProjectHtml(clip.title)}" class="clip-card-poster-img" />
+          ${clip.hookQuote ? `<div class="clip-card-hook-text">${escapeProjectHtml(clip.hookQuote)}</div>` : ''}
+
+          <!-- Checkbox Top-Left on hover -->
+          <div class="clip-card-checkbox ${isSelected ? 'checked' : ''}" onclick="event.stopPropagation(); window.toggleClipSelect('${clip.id}', this)" title="Chọn clip">
+            ${isSelected ? `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            ` : ''}
+          </div>
+
+          <!-- Top-Right Actions on hover: Open & 3-dots -->
+          <div class="clip-card-top-actions" id="clip-top-actions-${clip.id}">
+            <button type="button" class="clip-card-top-btn" onclick="event.stopPropagation(); window.openClipDetail('${clip.id}')" title="Mở chi tiết clip">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </button>
+            <button type="button" class="clip-card-top-btn" onclick="event.stopPropagation(); window.toggleClipMenu('${clip.id}', this)" title="Tùy chọn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="5" cy="12" r="2.2"></circle>
+                <circle cx="12" cy="12" r="2.2"></circle>
+                <circle cx="19" cy="12" r="2.2"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Dropdown Menu on 3-dots click -->
+          <div class="clip-card-dropdown" id="clip-dropdown-${clip.id}" onclick="event.stopPropagation()">
+            <button type="button" class="clip-card-dropdown-item" onclick="event.stopPropagation(); window.downloadClipDirect('${clip.id}')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Tải clip nổi bật</span>
+            </button>
+            <button type="button" class="clip-card-dropdown-item" onclick="event.stopPropagation(); window.renameClipDirect('${clip.id}')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>Đổi tên clip</span>
+            </button>
+            <button type="button" class="clip-card-dropdown-item danger" onclick="event.stopPropagation(); window.deleteClipDirect('${clip.id}')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Xóa</span>
+            </button>
+          </div>
+
+          <!-- Drive Saved Floating Badge on Poster -->
+          ${isDriveSaved ? `
+            <div class="clip-card-drive-pill" title="Tệp con đã được lưu vào Google Drive">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+              <span>Đã lưu Drive</span>
+            </div>
+          ` : ''}
+
+          <div class="clip-card-score-pill">
+            <span style="color: #ffdf00;">⚡</span>
+            <span>${clip.score}%</span>
+          </div>
+          <div class="clip-card-duration-pill">${escapeProjectHtml(clip.duration || '00:30')}</div>
+        </div>
+        <div class="clip-card-body">
+          <div class="clip-card-title" title="${escapeProjectHtml(clip.title)}">${escapeProjectHtml(clip.title)}</div>
+          <div class="clip-card-meta">
+            <span>${escapeProjectHtml(clip.timeAgo || '11 minutes ago')}</span>
+            <span>•</span>
+            <span>AI Clipping</span>
+            ${isDriveSaved ? `
+              <span>•</span>
+              <span class="clip-meta-drive-status" title="Đã đồng bộ lên Google Drive">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                Đã lưu Drive
+              </span>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  window.toggleClipSelect = function(clipId, el) {
+    if (selectedClipIds.has(clipId)) {
+      selectedClipIds.delete(clipId);
+      if (el) {
+        el.classList.remove('checked');
+        el.innerHTML = '';
+        const card = el.closest('.clip-card-item');
+        if (card) card.classList.remove('selected');
+      }
+    } else {
+      selectedClipIds.add(clipId);
+      if (el) {
+        el.classList.add('checked');
+        el.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        const card = el.closest('.clip-card-item');
+        if (card) card.classList.add('selected');
+      }
+    }
+    updateFloatingSelectionBar();
+    if (typeof showToast === 'function') {
+      showToast(`Đã ${selectedClipIds.has(clipId) ? 'chọn' : 'bỏ chọn'} clip. (Đang chọn ${selectedClipIds.size} clip)`, 'info');
+    }
+  };
+
+  window.toggleClipMenu = function(clipId, btn) {
+    const dd = document.getElementById(`clip-dropdown-${clipId}`);
+    if (!dd) return;
+    const isOpen = dd.classList.contains('open');
+    document.querySelectorAll('.clip-card-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.clip-card-top-actions.has-open-dropdown').forEach(a => a.classList.remove('has-open-dropdown'));
+    if (!isOpen) {
+      dd.classList.add('open');
+      const actionsWrap = document.getElementById(`clip-top-actions-${clipId}`);
+      if (actionsWrap) actionsWrap.classList.add('has-open-dropdown');
+    }
+  };
+
+  window.downloadClipDirect = function(clipId) {
+    document.querySelectorAll('.clip-card-dropdown.open').forEach(d => d.classList.remove('open'));
+    if (typeof showToast === 'function') {
+      showToast(`Đang tải clip nổi bật (${clipId})...`, 'success');
+    }
+  };
+
+  window.renameClipDirect = function(clipId) {
+    document.querySelectorAll('.clip-card-dropdown.open').forEach(d => d.classList.remove('open'));
+    const clips = activeProjectClips ? getProjectClipsData(activeProjectClips) : [];
+    const clip = clips.find(c => c.id === clipId);
+    const newName = prompt('Nhập tên mới cho clip:', clip ? clip.title : '');
+    if (newName && newName.trim()) {
+      if (clip) clip.title = newName.trim();
+      if (activeProjectClips) renderProjectClipsGrid(activeProjectClips);
+      if (typeof showToast === 'function') {
+        showToast('Đã đổi tên clip thành công!', 'success');
+      }
+    }
+  };
+
+  window.deleteClipDirect = function(clipId) {
+    document.querySelectorAll('.clip-card-dropdown.open').forEach(d => d.classList.remove('open'));
+    if (confirm('Bạn có chắc chắn muốn xóa clip nổi bật này?')) {
+      if (activeProjectClips) {
+        const clips = getProjectClipsData(activeProjectClips);
+        activeProjectClips.clips = clips.filter(c => c.id !== clipId);
+      }
+      selectedClipIds.delete(clipId);
+      if (activeProjectClips) renderProjectClipsGrid(activeProjectClips);
+      updateFloatingSelectionBar();
+      if (typeof showToast === 'function') {
+        showToast('Đã xóa clip thành công!', 'info');
+      }
+    }
+  };
+
+  // Close clip dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.clip-card-dropdown') && !e.target.closest('.clip-card-top-btn')) {
+      document.querySelectorAll('.clip-card-dropdown.open').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.clip-card-top-actions.has-open-dropdown').forEach(a => a.classList.remove('has-open-dropdown'));
+    }
+  });
 
   function renderProjectClipsGrid(proj) {
     const gridEl = document.getElementById('clips-items-grid');
@@ -8371,27 +8794,7 @@
       return;
     }
 
-    gridEl.innerHTML = clips.map(clip => `
-      <div class="clip-card-item" onclick="window.openClipDetail('${clip.id}')">
-        <div class="clip-card-poster-wrap">
-          <img src="${clip.thumbnail || 'media/image/farmstay_retinol_table.jpg'}" alt="${escapeProjectHtml(clip.title)}" class="clip-card-poster-img" />
-          ${clip.hookQuote ? `<div class="clip-card-hook-text">${escapeProjectHtml(clip.hookQuote)}</div>` : ''}
-          <div class="clip-card-score-pill">
-            <span style="color: #ffdf00;">⚡</span>
-            <span>${clip.score}%</span>
-          </div>
-          <div class="clip-card-duration-pill">${escapeProjectHtml(clip.duration || '00:30')}</div>
-        </div>
-        <div class="clip-card-body">
-          <div class="clip-card-title" title="${escapeProjectHtml(clip.title)}">${escapeProjectHtml(clip.title)}</div>
-          <div class="clip-card-meta">
-            <span>${escapeProjectHtml(clip.timeAgo || '11 minutes ago')}</span>
-            <span>•</span>
-            <span>AI Clipping</span>
-          </div>
-        </div>
-      </div>
-    `).join('');
+    gridEl.innerHTML = clips.map(clip => createClipCardHTML(clip, false)).join('');
   }
 
   window.openClipDetail = function(clipId) {
@@ -8410,6 +8813,13 @@
     const metaEl = document.getElementById('clip-detail-meta');
     if (titleEl) titleEl.textContent = clip.title;
     if (metaEl) metaEl.textContent = `Created by you, ${clip.timeAgo || '12m ago'}`;
+
+    // Drive status indicator in header
+    const isDriveSaved = Boolean(clip.isDriveSaved || (activeProjectClips && activeProjectClips.isDriveSaved));
+    const driveStatusEl = document.getElementById('clip-detail-drive-status');
+    if (driveStatusEl) {
+      driveStatusEl.style.display = isDriveSaved ? 'inline-flex' : 'none';
+    }
 
     // Video Player
     const videoEl = document.getElementById('clip-detail-video');
@@ -8479,7 +8889,7 @@
       `).join('');
     }
 
-    // Scroll Down Section: All clips from this project
+    // Scroll Down Section: All clips from this project (rendered with hover select & 3-dots)
     const scrollHeading = document.getElementById('clips-scroll-heading');
     if (scrollHeading && activeProjectClips) {
       scrollHeading.textContent = `All clips from ${activeProjectClips.name}`;
@@ -8488,36 +8898,177 @@
     const scrollGrid = document.getElementById('clips-scroll-grid');
     if (scrollGrid && activeProjectClips) {
       const otherClips = getProjectClipsData(activeProjectClips);
-      scrollGrid.innerHTML = otherClips.map(c => `
-        <div class="clip-card-item ${c.id === clip.id ? 'active-playing-clip' : ''}" onclick="window.openClipDetail('${c.id}')" style="${c.id === clip.id ? 'border-color: #00f5ff; box-shadow: 0 0 15px rgba(0, 245, 255, 0.25);' : ''}">
-          <div class="clip-card-poster-wrap">
-            <img src="${c.thumbnail || 'media/image/farmstay_retinol_table.jpg'}" alt="${escapeProjectHtml(c.title)}" class="clip-card-poster-img" />
-            ${c.hookQuote ? `<div class="clip-card-hook-text">${escapeProjectHtml(c.hookQuote)}</div>` : ''}
-            <div class="clip-card-score-pill">
-              <span style="color: #ffdf00;">⚡</span>
-              <span>${c.score}%</span>
-            </div>
-            <div class="clip-card-duration-pill">${escapeProjectHtml(c.duration || '00:30')}</div>
-          </div>
-          <div class="clip-card-body">
-            <div class="clip-card-title" title="${escapeProjectHtml(c.title)}">${escapeProjectHtml(c.title)}</div>
-            <div class="clip-card-meta">
-              <span>${escapeProjectHtml(c.timeAgo || '11 minutes ago')}</span>
-              <span>•</span>
-              <span>AI Clipping</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
+      scrollGrid.innerHTML = otherClips.map(c => createClipCardHTML(c, c.id === clip.id)).join('');
     }
+
+    // Group 5: Mini Editor in Actions tab
+    renderClipMiniEditor(clip);
 
     // Reset tab to Score
     window.switchInspectorTab('score');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  function renderClipMiniEditor(clip) {
+    const mountEl = document.getElementById('clip-mini-editor-mount');
+    if (!mountEl) return;
+
+    const isDriveSaved = activeProjectClips ? !!activeProjectClips.isDriveSaved : false;
+    const durSec = clip.durationSec || 30;
+    const durFormatted = clip.duration || '00:30';
+
+    mountEl.innerHTML = `
+      <div class="clip-mini-editor-section open" id="clip-mini-editor-section">
+        <div class="clip-mini-editor-header" onclick="window.toggleMiniEditor()">
+          <div class="clip-mini-editor-header-left">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="6" cy="6" r="3"></circle>
+              <circle cx="6" cy="18" r="3"></circle>
+              <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+              <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+              <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+            </svg>
+            <span>Chỉnh sửa clip nhanh (Trim / Sub / BGM)</span>
+          </div>
+          <svg class="clip-mini-editor-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="clip-mini-editor-body" style="position: relative;">
+          ${isDriveSaved ? `
+            <div class="clip-mini-editor-locked-overlay" id="clip-mini-editor-locked-overlay">
+              <div class="clip-mini-editor-locked-msg">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <strong>Phiên làm việc đã lưu trên Google Drive</strong>
+                <p>Clip đang ở chế độ xem an toàn (Cloud Archive). Mở lại phiên làm việc để chỉnh sửa clip.</p>
+                <button type="button" class="btn-reopen-session" style="margin-top: 6px;" onclick="window.pullFromDrive('${activeProjectClips ? activeProjectClips.id : ''}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+                  <span>Mở lại phiên làm việc</span>
+                </button>
+              </div>
+            </div>
+          ` : ''}
+          <div id="clip-mini-editor-body-inner" style="${isDriveSaved ? 'pointer-events: none; opacity: 0.35;' : ''}">
+            <!-- A. Trim -->
+            <div class="mini-editor-sub-section">
+              <div class="mini-editor-sub-label">✂️ Trim mốc thời gian</div>
+              <div class="mini-editor-range-wrap">
+                <input type="range" class="mini-editor-range" id="mini-editor-trim-range" min="5" max="${durSec}" value="${durSec}" oninput="window.updateTrimInput(this.value)" />
+                <div class="mini-editor-range-labels">
+                  <span>00:00</span>
+                  <span id="mini-editor-trim-label">${durFormatted}</span>
+                </div>
+              </div>
+              <div class="mini-editor-time-inputs">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">In:</span>
+                <input type="text" class="mini-editor-time-input" id="mini-editor-in-time" value="00:00" />
+                <span class="mini-editor-time-sep">➔</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Out:</span>
+                <input type="text" class="mini-editor-time-input" id="mini-editor-out-time" value="${durFormatted}" />
+                <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 0.75rem; margin-left: auto; border-radius: 6px;" onclick="window.previewTrimClip()">Xem thử</button>
+              </div>
+            </div>
+
+            <!-- B. Caption / Sub -->
+            <div class="mini-editor-sub-section">
+              <div class="mini-editor-sub-label">📝 Phụ đề / Hook nổi bật</div>
+              <textarea class="mini-editor-caption-textarea" id="mini-editor-caption-text" placeholder="Nhập câu hook hoặc caption hiển thị trên video...">${escapeProjectHtml(clip.hookQuote || '')}</textarea>
+              <div class="mini-editor-style-chips">
+                <span class="mini-editor-style-chip active" onclick="window.setMiniEditorCaptionStyle(this, 'bold')">Chữ đậm Highlight</span>
+                <span class="mini-editor-style-chip" onclick="window.setMiniEditorCaptionStyle(this, 'subtle')">Chữ nền mờ</span>
+                <span class="mini-editor-style-chip" onclick="window.setMiniEditorCaptionStyle(this, 'glow')">Hiệu ứng Neon</span>
+              </div>
+            </div>
+
+            <!-- C. BGM Nhạc nền -->
+            <div class="mini-editor-sub-section">
+              <div class="mini-editor-sub-label">🎵 Nhạc nền BGM</div>
+              <select class="mini-editor-bgm-select" id="mini-editor-bgm-select">
+                <option value="none">-- Giữ âm thanh gốc (Không thêm BGM) --</option>
+                <option value="upbeat" selected>Upbeat Trendy Pop (TikTok Viral Beat)</option>
+                <option value="lofi">Chill Lo-fi Beat (Tâm sự / Kể chuyện)</option>
+                <option value="dramatic">Cinematic Dramatic (Kịch tính / Bất ngờ)</option>
+                <option value="electronic">Cyberpunk Electronic (Hiện đại / Công nghệ)</option>
+              </select>
+              <div class="mini-editor-volume-row">
+                <span class="mini-editor-volume-label">Âm lượng BGM:</span>
+                <input type="range" class="mini-editor-range" id="mini-editor-bgm-vol" min="0" max="100" value="35" oninput="const vl = document.getElementById('mini-editor-vol-val'); if(vl) vl.textContent = this.value + '%'" />
+                <span id="mini-editor-vol-val" style="font-size: 0.74rem; font-family: var(--font-mono, monospace); color: var(--text-muted); min-width: 32px;">35%</span>
+              </div>
+            </div>
+
+            <!-- Apply Button -->
+            <button type="button" class="mini-editor-apply-btn" onclick="window.applyMiniEditorChanges()">
+              <span>Lưu & Cập Nhật Clip</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  window.toggleMiniEditor = function() {
+    const sec = document.getElementById('clip-mini-editor-section');
+    if (sec) sec.classList.toggle('open');
+  };
+
+  window.updateTrimInput = function(val) {
+    const sec = parseInt(val, 10) || 0;
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    const formatted = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    const lbl = document.getElementById('mini-editor-trim-label');
+    const outInp = document.getElementById('mini-editor-out-time');
+    if (lbl) lbl.textContent = formatted;
+    if (outInp) outInp.value = formatted;
+  };
+
+  window.previewTrimClip = function() {
+    const video = document.getElementById('clip-detail-video');
+    if (!video) return;
+    video.currentTime = 0;
+    video.play().catch(() => {});
+    if (typeof showToast === 'function') {
+      showToast('Đang phát thử đoạn cắt từ In point...', 'info');
+    }
+  };
+
+  window.setMiniEditorCaptionStyle = function(el, style) {
+    const chips = el.parentNode ? el.parentNode.querySelectorAll('.mini-editor-style-chip') : [];
+    chips.forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    if (typeof showToast === 'function') {
+      showToast(`Đã chọn kiểu hiển thị chữ: ${el.textContent}`, 'info');
+    }
+  };
+
+  window.applyMiniEditorChanges = function() {
+    if (!activeDetailClip) return;
+    const captionInp = document.getElementById('mini-editor-caption-text');
+    const outInp = document.getElementById('mini-editor-out-time');
+
+    if (captionInp && captionInp.value.trim()) {
+      activeDetailClip.hookQuote = captionInp.value.trim();
+      const hookEl = document.getElementById('clip-detail-hook-overlay');
+      if (hookEl) hookEl.textContent = activeDetailClip.hookQuote;
+    }
+
+    if (outInp && outInp.value.trim()) {
+      activeDetailClip.duration = outInp.value.trim();
+    }
+
+    if (typeof showToast === 'function') {
+      showToast('Đã lưu các tùy chỉnh Trim, Caption & BGM cho clip!', 'success');
+    }
+  };
+
   window.backToProjectsList = function() {
+    selectedClipIds.clear();
     switchPanel('panel-projects-hub');
+    updateFloatingSelectionBar();
   };
 
   window.backToProjectClips = function() {

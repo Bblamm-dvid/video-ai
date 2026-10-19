@@ -1679,49 +1679,134 @@ window.PROTOTYPE_INPUT_VAULT = [
 
 window.PROTOTYPE_VIDEO_PROJECTS = [
   {
-    id: "P8SZaeu1Ng",
-    name: "P8SZaeu1Ng",
+    id: "PRJ_HL_COMPLETE_01",
+    name: "Livestream Flash Sale 11/11 - Top 8 Clips",
     creator: "LÂM",
     category: "ai_clipping",
     categoryLabel: "Instant Highlights",
     tagLabel: "Highlight",
     folderId: "all",
     folderName: "Mặc định",
-    status: "Đang xử lý",
-    statusCode: "processing",
-    progress: 35,
-    progressLabel: "35% Rendering",
-    currentStep: 4,
-    stepLabel: "Đang hậu kỳ 35%",
-    isCompleted: false,
-    isProcessing: true,
+    status: "Hoàn tất (8 clips)",
+    statusCode: "completed",
+    progress: 100,
+    progressLabel: "Đã hoàn thành",
+    currentStep: 5,
+    stepLabel: "8 clips hoàn thiện",
+    isCompleted: true,
+    isProcessing: false,
     isDriveSaved: false,
-    clipsCount: 3,
-    timeAgo: "Chưa xong",
-    updatedAt: "Chưa xong",
+    clipsCount: 8,
+    timeAgo: "2 minutes ago",
+    updatedAt: "Vừa xong",
     updatedDate: "Hôm nay",
-    thumbnail: null,
-    isRendering: true,
+    thumbnail: "media/image/farmstay_retinol_water.jpg",
+    isRendering: false,
+    previewVideo: "media/video/final_final.mp4",
+    duration: "00:45",
     streamer: "Instant Highlights",
-    subtext: "Dự án tạo video tự động bằng AI Clipping từ livestream và media có sẵn.",
+    subtext: "Dự án video hoàn thiện tự động bằng AI Clipping từ livestream bán hàng, sẵn sàng xuất bản TikTok Shop.",
     chips: [
       { label: "Nguồn dữ liệu", count: 1, icon: "live" },
-      { label: "Clip tự động", count: 3, icon: "film" },
-      { label: "Rendering", count: 1, icon: "check" }
+      { label: "Clip hoàn thiện", count: 8, icon: "film" },
+      { label: "Đã kiểm duyệt", count: 8, icon: "check" }
     ],
     clips: [
       {
-        id: "P8S_CLIP_01",
-        title: "Deal Sốc Retinol 299k Độc Quyền",
-        score: 85,
-        grade: "A+",
-        potentialLabel: "High potential",
+        id: "HL_CLIP_01",
+        title: "Deal Sốc Retinol Farmstay 299k Độc Quyền",
+        score: 96,
+        grade: "S+",
+        potentialLabel: "Viral guarantee",
         duration: "45s",
         durationSec: 45,
-        hookQuote: "Hôm nay ai có mặt trong phiên live nhận ngay deal hời...",
-        timeAgo: "Vừa xong",
+        hookQuote: "Duy nhất phiên live hôm nay, Retinol Farmstay trợ giá 299k!",
+        timeAgo: "2 minutes ago",
         videoUrl: "media/video/final_final.mp4",
-        thumbnail: "media/image/farmstay_retinol_table.jpg"
+        thumbnail: "media/image/farmstay_retinol_table.jpg",
+        breakdown: {
+          hook: { score: 98, note: "Mở đầu trực diện đánh trúng tâm lý săn deal sốc 299k." },
+          flow: { score: 94, note: "Nhịp điệu dứt khoát, giới thiệu tính năng và hướng dẫn mua giỏ hàng liền mạch." },
+          value: { score: 96, note: "Giá trị khuyến mãi độc quyền, tạo cảm giác khan hiếm và cấp bách." },
+          trend: { score: 95, note: "Chủ đề Retinol và chăm sóc da đang lọt top thịnh hành TikTok Shop." }
+        },
+        transcript: [
+          { time: "00:00", text: "Duy nhất trong phiên live hôm nay, hũ Retinol Farmstay chính hãng được trợ giá chỉ còn 299 cành!" },
+          { time: "00:15", text: "Chất kem mỏng mịn thấm ngay sau 3 giây, phục hồi da căng bóng đón Tết." },
+          { time: "00:30", text: "Số lượng deal vàng có hạn, các chị em ấn ngay vào góc trái màn hình nhé!" }
+        ]
+      },
+      {
+        id: "HL_CLIP_02",
+        title: "Bí Quyết Thoa Retinol Êm Ru Cho Da Nhạy Cảm",
+        score: 91,
+        grade: "A+",
+        potentialLabel: "High potential",
+        duration: "38s",
+        durationSec: 38,
+        hookQuote: "Da mỏng yếu sợ bong tróc? Xem ngay cách dùng Retinol an toàn!",
+        timeAgo: "3 minutes ago",
+        videoUrl: "media/video/loi_giong_doc.mp4",
+        thumbnail: "media/image/farmstay_retinol_water.jpg",
+        breakdown: {
+          hook: { score: 92, note: "Giải tỏa nỗi sợ bong tróc đỏ rát của khách hàng da yếu." },
+          flow: { score: 90, note: "Chia sẻ công thức kẹp ẩm chuẩn chuyên gia da liễu." },
+          value: { score: 93, note: "Kiến thức thực chiến hữu ích giúp tăng uy tín bán hàng." },
+          trend: { score: 89, note: "Xu hướng phục hồi da khoa học (Skincare Routine)." }
+        },
+        transcript: [
+          { time: "00:00", text: "Rất nhiều bạn hỏi mình da mỏng đỏ có dùng được Retinol không?" },
+          { time: "00:14", text: "Câu trả lời là dùng phương pháp kẹp ẩm: Serum HA trước, Retinol ở giữa và khóa ẩm sau cùng." },
+          { time: "00:28", text: "Đảm bảo da êm ru không một chút châm chích, sáng dậy da mướt mịn!" }
+        ]
+      },
+      {
+        id: "HL_CLIP_03",
+        title: "Phân Biệt Retinol Thật & Giả Trên Thị Trường",
+        score: 88,
+        grade: "A",
+        potentialLabel: "High potential",
+        duration: "52s",
+        durationSec: 52,
+        hookQuote: "Đừng để tiền mất tật mang với mỹ phẩm xách tay không rõ nguồn gốc!",
+        timeAgo: "5 minutes ago",
+        videoUrl: "media/video/loi_text.mp4",
+        thumbnail: "media/image/farmstay_retinol_box.jpg",
+        breakdown: {
+          hook: { score: 90, note: "Cảnh báo hàng giả kích thích sự tò mò và cảnh giác của người mua." },
+          flow: { score: 86, note: "Chỉ rõ tem phụ, mã QR và chất kem phân biệt." },
+          value: { score: 92, note: "Bảo vệ sức khỏe người tiêu dùng, khẳng định nguồn hàng chính ngạch." },
+          trend: { score: 85, note: "Chủ đề bóc phốt mỹ phẩm luôn thu hút tương tác khủng." }
+        },
+        transcript: [
+          { time: "00:00", text: "Hàng trôi nổi trên mạng giá rẻ nhưng hậu quả cho da mặt thì không lường trước được." },
+          { time: "00:20", text: "Sản phẩm chính ngạch bắt buộc phải có tem phụ tiếng Việt và tem niêm phong phản quang." },
+          { time: "00:40", text: "Hãy là người tiêu dùng thông thái và chọn mua tại cửa hàng chính hãng nhé." }
+        ]
+      },
+      {
+        id: "HL_CLIP_04",
+        title: "Test Độ Thẩm Thấu Sau 10 Giây Trên Da Thật",
+        score: 85,
+        grade: "A",
+        potentialLabel: "High potential",
+        duration: "30s",
+        durationSec: 30,
+        hookQuote: "Thử thoa chất kem lên mu bàn tay và cái kết bất ngờ...",
+        timeAgo: "6 minutes ago",
+        videoUrl: "media/video/final_final.mp4",
+        thumbnail: "media/image/farmstay_retinol_hand.jpg",
+        breakdown: {
+          hook: { score: 86, note: "Visual hook cận cảnh chất kem mướt mịn." },
+          flow: { score: 85, note: "Thử nghiệm thực tế trực quan không cắt ghép." },
+          value: { score: 84, note: "Chứng minh sản phẩm không nhờn rít, khô thoáng nhanh." },
+          trend: { score: 85, note: "Video test sản phẩm thực tế chuyển đổi đơn hàng rất cao." }
+        },
+        transcript: [
+          { time: "00:00", text: "Bây giờ mình sẽ test trực tiếp độ thẩm thấu của em Retinol này cho mọi người xem nhé." },
+          { time: "00:12", text: "Chỉ sau 3 đường thoa nhẹ, kem đã tan hoàn toàn không để lại vệt trắng hay bết dính." },
+          { time: "00:24", text: "Cảm giác da nhẹ tênh như vừa đắp mặt nạ nước vậy đó!" }
+        ]
       }
     ],
     finalVideos: []

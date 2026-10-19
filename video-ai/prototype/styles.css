@@ -8742,12 +8742,205 @@ section.studio-center-stage {
   gap: 6px;
 }
 
+/* CLIP CARD HOVER CONTROLS: CHECKBOX & 3-DOTS MENU */
+.clip-card-checkbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 22;
+  opacity: 0;
+  transition: opacity 0.18s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.clip-card-item:hover .clip-card-checkbox,
+.clip-card-checkbox.checked {
+  opacity: 1;
+}
+
+.clip-card-checkbox.checked {
+  background: #00c7f2;
+  border-color: #00c7f2;
+}
+
+.clip-card-top-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 22;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.clip-card-item:hover .clip-card-top-actions,
+.clip-card-top-actions.has-open-dropdown {
+  opacity: 1;
+}
+
+.clip-card-top-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(15, 18, 24, 0.72);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.clip-card-top-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.06);
+}
+
+.clip-card-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 10px;
+  background: #17191e;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+  padding: 6px;
+  min-width: 170px;
+  z-index: 999;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdownFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.clip-card-dropdown.open {
+  display: flex;
+}
+
+.clip-card-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e2e8f0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.clip-card-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.clip-card-dropdown-item.danger {
+  color: #f87171;
+}
+
+.clip-card-dropdown-item.danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
+/* Clip Drive Saved Status & Sync Animation */
+.clip-card-drive-pill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(16, 185, 129, 0.92);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  z-index: 10;
+  letter-spacing: 0.2px;
+  transition: opacity 0.18s ease;
+  animation: drivePillPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.clip-card-item:hover .clip-card-drive-pill,
+.clip-card-top-actions.has-open-dropdown ~ .clip-card-drive-pill {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes drivePillPop {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.clip-meta-drive-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #10b981;
+  font-weight: 600;
+  font-size: 11.5px;
+}
+
+@keyframes clipDriveSyncGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(0);
+  }
+  30% {
+    box-shadow: 0 0 28px rgba(16, 185, 129, 0.7), 0 0 0 2px #10b981;
+    border-color: #10b981;
+    transform: translateY(-5px) scale(1.02);
+  }
+  70% {
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+    border-color: #10b981;
+    transform: translateY(-2px);
+  }
+  100% {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    border-color: rgba(16, 185, 129, 0.35);
+    transform: translateY(0) scale(1);
+  }
+}
+
+.clip-card-item.drive-sync-highlight {
+  animation: clipDriveSyncGlow 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.clip-card-item.drive-saved {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
 /* ==========================================================================
-   CLIP DETAIL VIEW (THEO ẢNH 2 - PLAYER + SCORE + SCROLL DOWN)
+   CLIP DETAIL VIEW (THEO ẢNH 2 - BALANCED & CENTERED HERO VIDEO)
    ========================================================================== */
 .clip-detail-container {
   padding: 1.5rem 2rem 5rem 2rem;
-  max-width: 1400px;
+  max-width: 1360px;
   margin: 0 auto;
 }
 
@@ -8755,9 +8948,13 @@ section.studio-center-stage {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.75rem;
+  margin-bottom: 2rem;
   gap: 1.5rem;
   flex-wrap: wrap;
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 .clip-detail-header-left {
@@ -8769,7 +8966,14 @@ section.studio-center-stage {
 .clip-detail-title-col {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+}
+
+.clip-detail-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .clip-detail-title {
@@ -8782,6 +8986,19 @@ section.studio-center-stage {
 
 [data-theme="dark"] .clip-detail-title {
   color: #ffffff;
+}
+
+.clip-detail-drive-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.32);
+  color: #10b981;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .clip-detail-meta {
@@ -8827,41 +9044,59 @@ section.studio-center-stage {
   color: #ffffff;
 }
 
-/* Split Main Layout */
+/* Split Main Layout - Centered Hero Video + Narrow Inspector */
 .clip-detail-main-layout {
   display: grid;
-  grid-template-columns: 460px 1fr;
-  gap: 2rem;
-  margin-bottom: 3.5rem;
+  grid-template-columns: minmax(440px, 490px) 440px;
+  justify-content: center;
+  gap: 3.5rem;
+  margin: 0 auto 3.5rem auto;
   align-items: start;
+  width: 100%;
+  max-width: 1040px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1060px) {
   .clip-detail-main-layout {
     grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 2rem;
   }
 }
 
-/* 9:16 Video Player Card */
+.clip-detail-player-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* 9:16 Video Player Card - Enlarged & Centered */
 .clip-916-player-card {
   position: relative;
   width: 100%;
-  aspect-ratio: 9 / 14;
-  max-height: 560px;
-  background: #090a0d;
-  border-radius: 16px;
+  max-width: 480px;
+  height: clamp(680px, calc(100vh - 140px), 820px);
+  aspect-ratio: 9 / 16;
+  background: #000000;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+[data-theme="dark"] .clip-916-player-card {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .clip-detail-video-el {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 24px;
 }
 
 .clip-player-overlay-play {
@@ -8869,11 +9104,11 @@ section.studio-center-stage {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 58px;
-  height: 58px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   border: 1.5px solid rgba(255, 255, 255, 0.3);
   display: flex;
   align-items: center;
@@ -8884,7 +9119,7 @@ section.studio-center-stage {
 }
 
 .clip-player-overlay-play:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.82);
   transform: translate(-50%, -50%) scale(1.08);
   border-color: #00f5ff;
 }
@@ -8906,14 +9141,21 @@ section.studio-center-stage {
   white-space: nowrap;
 }
 
-/* Inspector Card */
+.clip-detail-inspector-col {
+  width: 100%;
+  max-width: 440px;
+}
+
+/* Inspector Card - Narrowed & Compact */
 .clip-inspector-card {
   background: var(--bg-card);
   border: 1px solid var(--border-default);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 20px;
+  padding: 1.25rem 1.4rem;
   box-shadow: var(--shadow-sm);
+  min-height: clamp(540px, calc(100vh - 180px), 760px);
   transition: background 0.2s ease, border-color 0.2s ease;
+  width: 100%;
 }
 
 [data-theme="dark"] .clip-inspector-card {
@@ -10669,4 +10911,467 @@ aside.heygen-sidebar {
   padding-top: 10px;
 }
 
+/* ==========================================================================
+   PRJ CARD IMPROVEMENTS (v2)
+   ========================================================================== */
+
+/* --- Group 2: Parent Folder (Highlight isCompleted) --- */
+.project-card-item.is-parent-folder .project-card-play-hover-btn {
+  display: none !important;
+}
+
+.project-card-folder-hover-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.project-card-poster-wrap:hover .project-card-folder-hover-icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Folder count badge inside poster (bottom-left) */
+.project-card-folder-count-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 6px;
+  z-index: 7;
+  letter-spacing: 0.2px;
+}
+
+/* --- Group 4a: Drive Saved Grayscale --- */
+.project-card-item.is-drive-saved .project-card-poster-wrap {
+  filter: grayscale(1) brightness(0.72);
+  transition: filter 0.3s ease;
+}
+
+.project-card-item.is-drive-saved:hover .project-card-poster-wrap {
+  filter: grayscale(0.45) brightness(0.88);
+}
+
+/* Drive locked badge on card title area */
+.project-card-drive-locked-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* --- Group 4c: Session Drive Actions (Lưu Drive vs Mở lại phiên làm việc) --- */
+.btn-pull-from-drive,
+.btn-reopen-session {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(99, 102, 241, 0.16);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-pull-from-drive:hover,
+.btn-reopen-session:hover {
+  background: rgba(99, 102, 241, 0.28);
+  color: #c7d2fe;
+  border-color: rgba(99, 102, 241, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-save-session-drive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(2, 132, 199, 0.14);
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.32);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-save-session-drive:hover {
+  background: rgba(2, 132, 199, 0.26);
+  color: #7dd3fc;
+  border-color: rgba(2, 132, 199, 0.5);
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .btn-reopen-session {
+  background: rgba(99, 102, 241, 0.08);
+  color: #6366f1;
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="light"] .btn-save-session-drive {
+  background: rgba(2, 132, 199, 0.08);
+  color: #0284c7;
+  border-color: rgba(2, 132, 199, 0.25);
+}
+
+/* Clips panel header session actions */
+.clips-view-session-action-wrap {
+  display: flex;
+  align-items: center;
+}
+
+/* Button to jump directly to editor from player column */
+.btn-quick-edit-clip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(0, 199, 242, 0.12);
+  color: #00c7f2;
+  border: 1px solid rgba(0, 199, 242, 0.3);
+  font-weight: 700;
+  font-size: 0.86rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-quick-edit-clip:hover {
+  background: rgba(0, 199, 242, 0.22);
+  border-color: rgba(0, 199, 242, 0.55);
+  transform: translateY(-1px);
+}
+
+/* --- Group 5: Mini Editor (Expandable in Actions Tab) --- */
+.clip-mini-editor-section {
+  margin-top: 1.25rem;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-surface-subtle, rgba(255,255,255,0.03));
+}
+
+[data-theme="dark"] .clip-mini-editor-section {
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.clip-mini-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 15px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.clip-mini-editor-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.clip-mini-editor-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.clip-mini-editor-header-left svg {
+  color: #00c7f2;
+  flex-shrink: 0;
+}
+
+.clip-mini-editor-chevron {
+  transition: transform 0.22s ease;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.clip-mini-editor-section.open .clip-mini-editor-chevron {
+  transform: rotate(180deg);
+}
+
+.clip-mini-editor-body {
+  display: none;
+  padding: 14px 15px 16px 15px;
+  border-top: 1px solid var(--border-default);
+}
+
+[data-theme="dark"] .clip-mini-editor-body {
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+.clip-mini-editor-section.open .clip-mini-editor-body {
+  display: block;
+}
+
+/* Sub-section within mini editor */
+.mini-editor-sub-section {
+  margin-bottom: 1.1rem;
+}
+
+.mini-editor-sub-section:last-child {
+  margin-bottom: 0;
+}
+
+.mini-editor-sub-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 8px;
+}
+
+.mini-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Trim slider */
+.mini-editor-range-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.mini-editor-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono, monospace);
+  margin-top: 4px;
+}
+
+.mini-editor-time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.mini-editor-time-input {
+  width: 70px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-input, rgba(255,255,255,0.06));
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-family: var(--font-mono, monospace);
+  text-align: center;
+}
+
+[data-theme="dark"] .mini-editor-time-input {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.mini-editor-time-sep {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* Caption textarea */
+.mini-editor-caption-textarea {
+  width: 100%;
+  min-height: 68px;
+  resize: vertical;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-input, rgba(255,255,255,0.06));
+  color: var(--text-main);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+[data-theme="dark"] .mini-editor-caption-textarea {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.mini-editor-caption-textarea:focus {
+  outline: none;
+  border-color: #00c7f2;
+}
+
+/* Caption style chips */
+.mini-editor-style-chips {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.mini-editor-style-chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-muted);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.mini-editor-style-chip:hover,
+.mini-editor-style-chip.active {
+  background: rgba(0, 199, 242, 0.14);
+  color: #00c7f2;
+  border-color: rgba(0, 199, 242, 0.35);
+}
+
+/* BGM Select */
+.mini-editor-bgm-select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-input, rgba(255,255,255,0.06));
+  color: var(--text-main);
+  font-size: 0.82rem;
+  appearance: auto;
+}
+
+[data-theme="dark"] .mini-editor-bgm-select {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.mini-editor-volume-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mini-editor-volume-label {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 50px;
+}
+
+.mini-editor-apply-btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 9px 0;
+  border-radius: 9px;
+  font-size: 0.87rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #0284c7, #00c7f2);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  letter-spacing: 0.2px;
+}
+
+.mini-editor-apply-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Locked overlay for drive-saved */
+.clip-mini-editor-locked-overlay {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.clip-mini-editor-locked-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 18, 24, 0.7);
+  backdrop-filter: blur(3px);
+  z-index: 10;
+  border-radius: 10px;
+}
+
+.clip-mini-editor-locked-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 11;
+  color: #fff;
+  text-align: center;
+  padding: 12px;
+}
+
+.clip-mini-editor-locked-msg svg {
+  color: #818cf8;
+}
+
+.clip-mini-editor-locked-msg strong {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+.clip-mini-editor-locked-msg p {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* range input base */
+input[type="range"].mini-editor-range {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  accent-color: #00c7f2;
+  cursor: pointer;
+}
 
